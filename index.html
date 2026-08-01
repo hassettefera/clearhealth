@@ -1,48 +1,147 @@
-let currentLang = 'en'; let activeConditionId = ''; // 1. Expanded database with
-Diabetes and Asthma added const medicalDatabase = [ { id: 'blood_pressure',
-keywords: [ 'high blood pressure', 'hypertension', 'blood pressure',
-'hypertention', 'hipertension', 'presion', 'alta', 'presion alta',
-'hipertension', 'ypertension', '高血压', '血压', 'gaoxueya', 'ደም ግፊት', 'ግፊት',
-'dem gifit', 'cao huyet ap', 'huyet ap', 'cao huyết áp' ] }, { id: 'diabetes',
-keywords: [ 'diabetes', 'high blood sugar', 'diabetis', 'diabete', 'sugar
-disease', // English & typos 'diabetes', 'azucar alta', 'diabetis', 'azucar', //
-Spanish & typos '糖尿病', '血糖高', 'tangniaobing', 'xuetang', // Mandarin 'ስኳር
-በሽታ', 'ስኳር', 'sukar beshita', 'sukar', // Amharic 'tieu duong', 'bệnh tiểu
-đường', 'tiểu đường', 'duong huyet' // Vietnamese ] }, { id: 'asthma', keywords:
-[ 'asthma', 'breathing trouble', 'astha', 'asmar', 'asthmar', // English & typos
-'asma', 'problema respiratorio', 'asmatiko', // Spanish & typos '哮喘', '气喘',
-'xiaochuan', // Mandarin 'አስም', 'የመተንፈስ ችግር', 'asme', 'asym', // Amharic 'hen
-suyên', 'bệnh hen', 'suyễn', 'hen suyen' // Vietnamese ] } ]; const fuseOptions
-= { includeScore: true, threshold: 0.4, keys: ['keywords'] }; const fuseInstance
-= new Fuse(medicalDatabase, fuseOptions); function runSearch() { const query =
-document.getElementById('search-input').value.toLowerCase().trim(); const
-resultsCard = document.getElementById('results-card'); if (!query) return; const
-searchResults = fuseInstance.search(query); if (searchResults.length > 0) {
-activeConditionId = searchResults[0].item.id; // Get the closest match card ID
-resultsCard.style.display = "block"; updatePageLanguage(); } else {
-alert("Condition not found. Try searching for 'High Blood Pressure', 'Diabetes',
-or 'Asthma'."); } } function changeLanguage() { currentLang =
-document.getElementById('lang-select').value; updatePageLanguage(); } function
-updatePageLanguage() { const title = document.getElementById('search-title');
-const input = document.getElementById('search-input'); const btn =
-document.getElementById('search-btn'); const label =
-document.getElementById('lang-label'); // Hide all results sections first const
-contents = document.getElementsByClassName('lang-content'); for (let i = 0; i <
-contents.length; i++) { contents[i].style.display = 'none'; } // Manage
-Interface Text translations if (currentLang === 'es') { title.innerHTML =
-"Información Médica, Simplificada."; input.placeholder = "Escriba una condición
-(ej. Diabetes)..."; btn.innerHTML = "Buscar"; label.innerHTML = "Idioma:"; }
-else if (currentLang === 'zh') { title.innerHTML = "医学信息，通俗易懂。";
-input.placeholder = "输入疾病名称 (例如：糖尿病)..."; btn.innerHTML = "搜索";
-label.innerHTML = "语言:"; } else if (currentLang === 'am') { title.innerHTML =
-"የሕክምና መረጃ፣ በቀላሉ የቀረበ።"; input.placeholder = "የበሽታውን ስም ያስገቡ (ምሳሌ፦ ስኳር በሽታ)...";
-btn.innerHTML = "ፈልግ"; label.innerHTML = "ቋንቋ፦"; } else if (currentLang ===
-'vi') { title.innerHTML = "Thông Tin Y Tế, Đơn Giản Hóa."; input.placeholder =
-"Nhập tên bệnh (ví dụ: Tiểu Đường)..."; btn.innerHTML = "Tìm kiếm";
-label.innerHTML = "Ngôn ngữ:"; } else { title.innerHTML = "Medical Information,
-Simplified."; input.placeholder = "Type a condition (e.g., Diabetes)...";
-btn.innerHTML = "Search"; label.innerHTML = "Language:"; } // Display the
-correct matching language content block if (activeConditionId) { const
-targetBlockId = `content-${activeConditionId}-${currentLang}`; const targetBlock
-= document.getElementById(targetBlockId); if (targetBlock) {
-targetBlock.style.display = 'block'; } } }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearHealth - DMV Medical Search Engine</title>
+  <!-- This line right here links your design style.css file! -->
+  <link rel="stylesheet" href="style.css">
+  <!-- This script adds the free Fuse.js typo-correction engine -->
+  <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="logo">ClearHealth</div>
+    <div class="lang-selector">
+      <label for="lang-select" id="lang-label">Language:</label>
+      <select id="lang-select" onchange="changeLanguage()">
+        <option value="en">English</option>
+        <option value="es">Español (Spanish)</option>
+        <option value="zh">中文 (Mandarin Chinese)</option>
+        <option value="am">አማርኛ (Amharic)</option>
+        <option value="vi">Tiếng Việt (Vietnamese)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Search Engine Area -->
+  <main class="search-container">
+    <h2 id="search-title">Medical Information, Simplified.</h2>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Type a condition (e.g., Diabetes)...">
+      <button id="search-btn" onclick="runSearch()">Search</button>
+    </div>
+
+    <!-- Medical Disclaimer -->
+    <p class="disclaimer"><strong>Disclaimer:</strong> Student project for educational purposes only. Not medical advice.</p>
+
+    <!-- Search Results Container -->
+    <div id="results-card" style="display: none;">
+      
+      <!-- ================= BLOOD PRESSURE MODULE ================= -->
+      <div id="content-blood_pressure-en" class="lang-content" style="display: none;">
+        <h1>Understanding High Blood Pressure (Hypertension)</h1>
+        <p>Imagine your blood vessels are like a garden hose. High blood pressure means blood pushes too hard against the inside of the hose, harming your heart over time.</p>
+        <h3>Lifestyle Changes:</h3>
+        <ul><li>Eat less salt.</li><li>Walk 30 minutes daily.</li></ul>
+      </div>
+      <div id="content-blood_pressure-es" class="lang-content" style="display: none;">
+        <h1>Presión Arterial Alta (Hipertensión)</h1>
+        <p>Imagine que sus vasos sanguíneos son como una manguera. La presión alta significa que la sangre empuja con demasiada fuerza contra el interior, dañando su corazón.</p>
+        <h3>Cambios de Estilo de Vida:</h3>
+        <ul><li>Coma menos sal.</li><li>Camine 30 minutos al día.</li></ul>
+      </div>
+      <div id="content-blood_pressure-zh" class="lang-content" style="display: none;">
+        <h1>了解高血压 (Hypertension)</h1>
+        <p>想象您的血管就像花园水管。高血压意味着血液在水管内部推得太用力，久而久之会伤害您的心脏。</p>
+        <h3>改变生活方式：</h3>
+        <ul><li>少吃盐。</li><li>每天散步30分钟。</li></ul>
+      </div>
+      <div id="content-blood_pressure-am" class="lang-content" style="display: none;">
+        <h1>ከፍተኛ የደም ግፊት (Hypertension) መረዳት</h1>
+        <p>የደም ሥሮችዎን ልክ እንደ ውሃ ቱቦ ያስቡ። ከፍተኛ የደም ግፊት ማለት ደም በቱቦው ውስጥ በጣም በኃይል እየገፋ ነው ማለት ነው፣ ይህም ልብዎን ሊጎዳ ይችላል።</p>
+        <h3>የአኗኗር ዘይቤ ለውጦች፦</h3>
+        <ul><li>ጨው መቀነስ።</li><li>በየቀኑ ለ30 ደቂቃ መራመድ。</li></ul>
+      </div>
+      <div id="content-blood_pressure-vi" class="lang-content" style="display: none;">
+        <h1>Cao Huyết Áp (Tăng Huyết Áp)</h1>
+        <p>Hãy tưởng tượng mạch máu giống như một vòi ống nước. Cao huyết áp có nghĩa là máu đang đẩy quá mạnh vào thành trong của ống, gây hại cho tim.</p>
+        <h3>Thay Đổi Lối Sống:</h3>
+        <ul><li>Ăn ít muối.</li><li>Đi bộ 30 phút mỗi ngày.</li></ul>
+      </div>
+
+      <!-- ================= DIABETES MODULE ================= -->
+      <div id="content-diabetes-en" class="lang-content" style="display: none;">
+        <h1>Understanding Diabetes (High Blood Sugar)</h1>
+        <p>When you eat, your body turns food into sugar for energy. Your body uses a key called insulin to open your cells and let the sugar in. Diabetes means your body lost the key, causing sugar to pile up dangerously in your blood.</p>
+        <h3>Lifestyle Changes:</h3>
+        <ul><li>Cut back on sweet drinks, juices, and white bread.</li><li>Move your body daily to help clear sugar out of your blood naturally.</li></ul>
+      </div>
+      <div id="content-diabetes-es" class="lang-content" style="display: none;">
+        <h1>Entendiendo la Diabetes (Azúcar Alta)</h1>
+        <p>Su cuerpo convierte la comida en azúcar para tener energía usando una llave llamada insulina. La diabetes significa que el cuerpo perdió esa llave, haciendo que el azúcar se acumule de forma peligrosa en la sangre.</p>
+        <h3>Cambios de Estilo de Vida:</h3>
+        <ul><li>Evite las bebidas dulces, jugos y pan blanco.</li><li>Haga ejercicio para ayudar a limpiar el azúcar en la sangre de forma natural.</li></ul>
+      </div>
+      <div id="content-diabetes-zh" class="lang-content" style="display: none;">
+        <h1>了解糖尿病 (High Blood Sugar)</h1>
+        <p>您的身体将食物转化为糖分以提供能量，并使用一种叫做胰岛素的“钥匙”让糖分进入细胞。糖尿病意味着您的身体失去了这把钥匙，导致糖分在血液中危险地堆积。</p>
+        <h3>改变生活方式：</h3>
+        <ul><li>减少含糖饮料、果汁和白面包的摄入。</li><li>每天运动，帮助身体自然消耗血液中的糖分。</li></ul>
+      </div>
+      <div id="content-diabetes-am" class="lang-content" style="display: none;">
+        <h1>ስኳር በሽታ (Diabetes) መረዳት</h1>
+        <p>ሰውነትዎ የሚበሉትን ምግብ ለኃይል ወደ ስኳር ይለውጠዋል። ይህንን ስኳር ወደ ህዋሳት ለማስገባት ኢንሱሊን የሚባል ቁልፍ ይጠቀማል። ስኳር በሽታ ማለት ሰውነትዎ ይህንን ቁልፍ ሲያጣ እና ስኳር በደምዎ ውስጥ በአደገኛ ሁኔታ ሲከማች ነው።</p>
+        <h3>የአኗኗር ዘይቤ ለውጦች፦</h3>
+        <ul><li>ጣፋጭ መጠጦችን፣ ጁሶችን እና ነጭ ዳቦን ይቀንሱ።</li><li>ስኳርን ከደምዎ ውስጥ በተፈጥሮ ለማስወげて በየቀኑ የአካል ብቃት እንቅስቃሴ ያድርጉ።</li></ul>
+      </div>
+      <div id="content-diabetes-vi" class="lang-content" style="display: none;">
+        <h1>Hiểu Về Bệnh Tiểu Đường (Đường Huyết Cao)</h1>
+        <p>Cơ thể chuyển thức ăn thành đường để tạo năng lượng và dùng một chiếc chìa khóa tên là insulin để đưa đường vào tế bào. Bệnh tiểu đường nghĩa là cơ thể mất chìa khóa này, làm đường tích tụ nguy hiểm trong máu.</p>
+        <h3>Thay Đổi Lối Sống:</h3>
+        <ul><li>Cắt giảm nước ngọt, nước trái cây và bánh mì trắng.</li><li>Vận động hàng ngày để giúp tiêu bớt đường trong máu một cách tự nhiên.</li></ul>
+      </div>
+
+      <!-- ================= ASTHMA MODULE ================= -->
+      <div id="content-asthma-en" class="lang-content" style="display: none;">
+        <h1>Understanding Asthma</h1>
+        <p>Asthma makes the breathing tubes inside your lungs get swollen, tight, and narrow. Think of it like trying to breathe through a very tiny, pinched straw.</p>
+        <h3>Lifestyle Changes:</h3>
+        <ul><li>Keep your home free of dust, cigarette smoke, and strong chemical odors.</li><li>Always keep your rescue inhaler with you wherever you go.</li></ul>
+      </div>
+      <div id="content-asthma-es" class="lang-content" style="display: none;">
+        <h1>Entendiendo el Asma</h1>
+        <p>El asma hace que los tubos respiratorios de sus pulmones se hinchen y se vuelvan estrechos. Es como intentar respirar a través de un popote o pajilla muy pequeña y apretada.</p>
+        <h3>Cambios de Estilo de Vida:</h3>
+        <ul><li>Mantenga su casa libre de polvo, humo de cigarrillo y olores químicos fuertes.</li><li>Lieve siempre consigo su inhalador de rescate.</li></ul>
+      </div>
+      <div id="content-asthma-zh" class="lang-content" style="display: none;">
+        <h1>了解哮喘 (Asthma)</h1>
+        <p>哮喘会使您肺部的呼吸管道红肿、收紧和变窄。这就像试图通过一根非常细小、被捏扁的吸管来呼吸一样困难。</p>
+        <h3>改变生活方式：</h3>
+        <ul><li>保持房屋干净，避免灰尘、二手烟和强烈的化学气味。</li><li>无论去哪里，请务必随身携带急救吸入器（喷雾）。</li></ul>
+      </div>
+      <div id="content-asthma-am" class="lang-content" style="display: none;">
+        <h1>አስም (Asthma) መረዳት</h1>
+        <p>አስም በሳንባዎ ውስጥ ያሉ የመተንፈሻ ቱቦዎች እንዲያብጡ፣ እንዲጠቡ እና እንዲጠገኑ ያደርጋል። ይህ በትናንሽ እና በታፈነ የውሃ መጠጫ ቱቦ ለመተнፈስ እንደመሞከር ያህል ነው።</p>
+        <h3>የአኗኗር ዘይቤ ለውጦች፦</h3>
+        <ul><li>ቤትዎን ከአቧራ፣ ከሲጋራ ጢስ እና ከበድ ያሉ የኬሚካል ሽታዎች ነፃ ያድርጉ።</li><li>የትም ቦታ ሲሄዱ ሁልጊዜ የአስም ማስታገሻ መድሃኒትዎን (Inhaler) ይዘው ይሂዱ።</li></ul>
+      </div>
+      <div id="content-asthma-vi" class="lang-content" style="display: none;">
+        <h1>Hiểu Về Bệnh Hen Suyễn (Asthma)</h1>
+        <p>Bệnh hen suyễn làm cho các đường ống thở bên trong phổi bị sưng lên, thắt chặt và thu hẹp lại. Hãy tưởng tượng như bạn đang cố gắng thở qua một chiếc ống hút cực kỳ nhỏ và bị bóp nghẹt.</p>
+        <h3>Thay Đổi Lối Sống:</h3>
+        <ul><li>Giữ nhà cửa sạch bụi, không có khói thuốc lá và mùi hóa chất mạnh.</li><li>Luôn mang theo ống xịt cắt cơn hen suyễn bên mình mọi lúc mọi nơi.</li></ul>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- This script line ties your brain script.js file to your page layout! -->
+  <script src="script.js"></script>
+</body>
+</html>
+
