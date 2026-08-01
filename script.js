@@ -1,7 +1,7 @@
 let currentLang = 'en';
 let activeConditionId = ''; 
 
-// 1. Expanded database with Diabetes and Asthma added
+// 1. Core Medical Database with multi-language keywords & common typos
 const medicalDatabase = [
   {
     id: 'blood_pressure',
@@ -35,17 +35,21 @@ const medicalDatabase = [
   }
 ];
 
+// 2. Configure typo-correction engine rules
 const fuseOptions = {
   includeScore: true,
-  threshold: 0.4, 
+  threshold: 0.4, // Allows typos but keeps matching smart
   keys: ['keywords']
 };
 
-// Initialize Fuse.js once the page loads
 let fuseInstance;
+
+// Safely initialize the engine once the web page loads completely
 window.onload = function() {
   if (typeof Fuse !== 'undefined') {
     fuseInstance = new Fuse(medicalDatabase, fuseOptions);
+  } else {
+    console.error("Fuse.js failed to load from the internet server.");
   }
 };
 
@@ -54,15 +58,17 @@ function runSearch() {
   const resultsCard = document.getElementById('results-card');
   
   if (!query) return;
+  
   if (!fuseInstance) {
-    alert("Search engine is still loading, please try again in a second!");
+    alert("Search engine is still initializing. Please wait one moment and click Search again!");
     return;
   }
 
+  // Execute fuzzy match matching rules
   const searchResults = fuseInstance.search(query);
 
   if (searchResults.length > 0) {
-    activeConditionId = searchResults[0].item.id; // Get the closest match card ID
+    activeConditionId = searchResults[0].item.id; // Extracts the best matching card name
     resultsCard.style.display = "block"; 
     updatePageLanguage();
   } else {
@@ -81,13 +87,13 @@ function updatePageLanguage() {
   const btn = document.getElementById('search-btn');
   const label = document.getElementById('lang-label');
   
-  // Hide all results sections first
+  // Hide all results sections first to prevent layout layering
   const contents = document.getElementsByClassName('lang-content');
   for (let i = 0; i < contents.length; i++) {
     contents[i].style.display = 'none';
   }
   
-  // Manage Interface Text translations
+  // Translate Interface Text templates dynamically
   if (currentLang === 'es') {
     title.innerHTML = "Información Médica, Simplificada.";
     input.placeholder = "Escriba una condición (ej. Diabetes)...";
@@ -115,7 +121,7 @@ function updatePageLanguage() {
     label.innerHTML = "Language:";
   }
 
-  // Display the correct matching language content block
+  // Display the correct matching condition card in the correct target language
   if (activeConditionId) {
     const targetBlockId = `content-${activeConditionId}-${currentLang}`;
     const targetBlock = document.getElementById(targetBlockId);
