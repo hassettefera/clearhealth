@@ -1,0 +1,143 @@
+/* Clean, Highly Readable Fonts and Calm Tones */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background-color: #f0f7fa; /* Very Soft, Light Pastel Blue Background */
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Header Navigation Layout */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #e1eff5;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0077b6; /* Medical Blue Brand Accent */
+  letter-spacing: -0.5px;
+}
+
+.lang-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #bce1f2;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #2c3e50;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Centered Search Engine Layout */
+.search-container {
+  max-width: 600px;
+  margin: 80px auto 40px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 600;
+  color: #1d3557;
+  margin-bottom: 24px;
+}
+
+.search-box {
+  display: flex;
+  background: #ffffff;
+  border: 2px solid #bce1f2;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 119, 182, 0.04);
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 16px 24px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+/* User-Friendly Button Interaction */
+button {
+  background-color: #0077b6;
+  color: #ffffff;
+  border: none;
+  padding: 0 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0096c7; /* Lighter vivid blue on mouse hover */
+}
+
+/* Gray Secondary Disclaimer */
+.disclaimer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+/* Formatted Search Results Info Card */
+#results-card {
+  margin-top: 35px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 10px 20px rgba(29, 53, 87, 0.04);
+  border-top: 6px solid #0077b6; /* Distinct Blue Top Border Line */
+}
+
+#results-card h1 {
+  font-size: 24px;
+  color: #1d3557;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+#results-card h3 {
+  font-size: 18px;
+  color: #0077b6;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+#results-card p {
+  font-size: 16px;
+  color: #4a5568;
+  margin-bottom: 16px;
+}
+
+#results-card ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+#results-card li {
+  font-size: 16px;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
