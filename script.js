@@ -1,132 +1,246 @@
-let currentLang = 'en';
-let activeConditionId = ''; 
-
-// 1. Core Medical Database with multi-language keywords & common typos
-const medicalDatabase = [
-  {
-    id: 'blood_pressure',
-    keywords: [
-      'high blood pressure', 'hypertension', 'blood pressure', 'hypertention', 'hipertension',
-      'presion', 'alta', 'presion alta', 'hipertension', 'ypertension',
-      '高血压', '血压', 'gaoxueya',
-      'ደም ግፊት', 'ግፊት', 'dem gifit',
-      'cao huyet ap', 'huyet ap', 'cao huyết áp'
-    ]
-  },
-  {
-    id: 'diabetes',
-    keywords: [
-      'diabetes', 'high blood sugar', 'diabetis', 'diabete', 'sugar disease',
-      'diabetes', 'azucar alta', 'diabetis', 'azucar',
-      '糖尿病', '血糖高', 'tangniaobing', 'xuetang',
-      'ስኳር በሽታ', 'ስኳር', 'sukar beshita', 'sukar',
-      'tieu duong', 'bệnh tiểu đường', 'tiểu đường', 'duong huyet'
-    ]
-  },
-  {
-    id: 'asthma',
-    keywords: [
-      'asthma', 'breathing trouble', 'astha', 'asmar', 'asthmar',
-      'asma', 'problema respiratorio', 'asmatiko',
-      '哮喘', '气喘', 'xiaochuan',
-      'አስም', 'የመተንፈስ ችግር', 'asme', 'asym',
-      'hen suyên', 'bệnh hen', 'suyễn', 'hen suyen'
-    ]
-  }
-];
-
-// 2. Configure typo-correction engine rules
-const fuseOptions = {
-  includeScore: true,
-  threshold: 0.4, // Allows typos but keeps matching smart
-  keys: ['keywords']
-};
-
-let fuseInstance;
-
-// Safely initialize the engine once the web page loads completely
-window.onload = function() {
-  if (typeof Fuse !== 'undefined') {
-    fuseInstance = new Fuse(medicalDatabase, fuseOptions);
-  } else {
-    console.error("Fuse.js failed to load from the internet server.");
-  }
-};
-
-function runSearch() {
-  const query = document.getElementById('search-input').value.toLowerCase().trim();
-  const resultsCard = document.getElementById('results-card');
-  
-  if (!query) return;
-  
-  if (!fuseInstance) {
-    alert("Search engine is still initializing. Please wait one moment and click Search again!");
-    return;
-  }
-
-  // Execute fuzzy match matching rules
-  const searchResults = fuseInstance.search(query);
-
-  if (searchResults.length > 0) {
-    activeConditionId = searchResults[0].item.id; // Extracts the best matching card name
-    resultsCard.style.display = "block"; 
-    updatePageLanguage();
-  } else {
-    alert("Condition not found. Try searching for 'High Blood Pressure', 'Diabetes', or 'Asthma'.");
-  }
+```css
+/* Custom Aesthetic Design Tokens */
+:root {
+  --bg-gradient: linear-gradient(135deg, #eef7fc 0%, #e2eff7 100%);
+  --card-shadow: 0 20px 40px rgba(142, 172, 194, 0.15);
+  --input-shadow: 0 8px 30px rgba(162, 193, 214, 0.12);
+  --primary-blue: #0077b6;
+  --dark-navy: #1d3557;
+  --text-dark: #334155;
+  --text-muted: #64748b;
+  --pure-white: #ffffff;
 }
 
-function changeLanguage() {
-  currentLang = document.getElementById('lang-select').value;
-  updatePageLanguage();
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-function updatePageLanguage() {
-  const title = document.getElementById('search-title');
-  const input = document.getElementById('search-input');
-  const btn = document.getElementById('search-btn');
-  const label = document.getElementById('lang-label');
-  
-  // Hide all results sections first to prevent layout layering
-  const contents = document.getElementsByClassName('lang-content');
-  for (let i = 0; i < contents.length; i++) {
-    contents[i].style.display = 'none';
-  }
-  
-  // Translate Interface Text templates dynamically
-  if (currentLang === 'es') {
-    title.innerHTML = "Información Médica, Simplificada.";
-    input.placeholder = "Escriba una condición (ej. Diabetes)...";
-    btn.innerHTML = "Buscar";
-    label.innerHTML = "Idioma:";
-  } else if (currentLang === 'zh') {
-    title.innerHTML = "医学信息，通俗易懂。";
-    input.placeholder = "输入疾病名称 (例如：糖尿病)...";
-    btn.innerHTML = "搜索";
-    label.innerHTML = "语言:";
-  } else if (currentLang === 'am') {
-    title.innerHTML = "የሕክምና መረጃ፣ በቀላሉ የቀረበ።";
-    input.placeholder = "የበሽታውን ስም ያስገቡ (ምሳሌ፦ ስኳር በሽታ)...";
-    btn.innerHTML = "ፈልግ";
-    label.innerHTML = "ቋንቋ፦";
-  } else if (currentLang === 'vi') {
-    title.innerHTML = "Thông Tin Y Tế, Đơn Giản Hóa.";
-    input.placeholder = "Nhập tên bệnh (ví dụ: Tiểu Đường)...";
-    btn.innerHTML = "Tìm kiếm";
-    label.innerHTML = "Ngôn ngữ:";
-  } else {
-    title.innerHTML = "Medical Information, Simplified.";
-    input.placeholder = "Type a condition (e.g., Diabetes)...";
-    btn.innerHTML = "Search";
-    label.innerHTML = "Language:";
-  }
-
-  // Display the correct matching condition card in the correct target language
-  if (activeConditionId) {
-    const targetBlockId = `content-${activeConditionId}-${currentLang}`;
-    const targetBlock = document.getElementById(targetBlockId);
-    if (targetBlock) {
-      targetBlock.style.display = 'block';
-    }
-  }
+/* Minimalist Glass Header Navigation */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 8%;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
+
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--dark-navy);
+  letter-spacing: -0.5px;
+}
+
+.logo span {
+  color: var(--primary-blue);
+}
+
+select {
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 119, 182, 0.15);
+  background-color: var(--pure-white);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dark);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+select:hover {
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
+}
+
+/* Application Layout Structure */
+.app-container {
+  max-width: 680px;
+  margin: 60px auto 80px auto;
+  padding: 0 24px;
+}
+
+.hero-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--dark-navy);
+  margin: 0 0 14px 0;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 17px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Premium Floating Search Box */
+.search-box {
+  display: flex;
+  background: var(--pure-white);
+  border-radius: 32px;
+  padding: 6px 6px 6px 20px;
+  box-shadow: var(--input-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  align-items: center;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 119, 182, 0.15);
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+}
+
+input[type="text"] {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-dark);
+  background: transparent;
+}
+
+input[type="text"]::placeholder {
+  color: #cbd5e1;
+}
+
+/* Aesthetic Pill Button */
+button {
+  background: var(--primary-blue);
+  color: var(--pure-white);
+  border: none;
+  padding: 14px 32px;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #0096c7;
+  transform: scale(1.02);
+}
+
+/* Floating Clean Results Card Layout */
+#results-card {
+  background: var(--pure-white);
+  padding: 40px;
+  border-radius: 28px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  animation: cardFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.category-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+#results-card h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--dark-navy);
+  margin: 0 0 24px 0;
+  letter-spacing: -0.5px;
+}
+
+.info-section {
+  margin-bottom: 28px;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+#results-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin: 0 0 10px 0;
+}
+
+#results-card p {
+  font-size: 16px;
+  color: #475569;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Modern Card Grid Layout for Actions */
+.action-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.action-item {
+  background: #f8fafc;
+  border-left: 4px solid var(--primary-blue);
+  padding: 16px 20px;
+  border-radius: 4px 16px 16px 4px;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.action-item strong {
+  color: var(--dark-navy);
+}
+
+.disclaimer {
+  margin-top: 40px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  text-align: center;
+}
+```
