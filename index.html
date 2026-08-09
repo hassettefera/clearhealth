@@ -3,66 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClearHealth - Simplified Medical Literacy</title>
+  <title>HealthTranslate</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 </head>
 <body>
 
   <header>
-    <div class="logo">Clear<span>Health</span></div>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <span class="cross-line cross-v"></span>
+        <span class="cross-line cross-h"></span>
+      </div>
+      <div class="logo-text">
+        Health<span class="logo-accent">Translate</span>
+      </div>
+    </div>
+    
     <div class="lang-selector">
       <label for="lang-select">Language:</label>
       <select id="lang-select" onchange="changeLanguage()">
-        <option value="en">🇺🇸 English</option>
-        <option value="es">🇪🇸 Español</option>
-        <option value="zh">🇨🇳 中文</option>
-        <option value="am">🇪🇹 አማርኛ</option>
-        <option value="vi">🇻🇳 Tiếng Việt</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="zh">中文</option>
+        <option value="am">አማርኛ</option>
+        <option value="vi">Tiếng Việt</option>
       </select>
     </div>
   </header>
 
   <main class="app-container">
     
-    <div class="hero-section">
+    <section class="hero-section">
       <h2 id="search-title">Medical information, simplified.</h2>
       <p id="search-subtitle" class="subtitle">Understand your diagnosis and next steps in clear, everyday language.</p>
-    </div>
+    </section>
 
     <div class="search-box">
       <div class="search-input-wrapper">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="search-input" placeholder="Search a condition (e.g., Diabetes, Asthma)...">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search a condition (e.g., Diabetes, Asthma)..." onkeypress="if(event.key === 'Enter') runSearch()">
       </div>
       <button id="search-btn" onclick="runSearch()">Search</button>
     </div>
 
     <div class="quick-tags">
       <span>Popular:</span>
-      <button type="button" class="tag-btn" onclick="quickSearch('blood_pressure')">Blood Pressure</button>
-      <button type="button" class="tag-btn" onclick="quickSearch('diabetes')">Diabetes</button>
-      <button type="button" class="tag-btn" onclick="quickSearch('asthma')">Asthma</button>
-      <button type="button" class="tag-btn" onclick="quickSearch('cholesterol')">Cholesterol</button>
-      <button type="button" class="tag-btn" onclick="quickSearch('anemia')">Anemia</button>
+      <button class="tag-btn" onclick="quickSearch('blood_pressure')">Blood Pressure</button>
+      <button class="tag-btn" onclick="quickSearch('diabetes')">Diabetes</button>
+      <button class="tag-btn" onclick="quickSearch('asthma')">Asthma</button>
+      <button class="tag-btn" onclick="quickSearch('migraine')">Migraine</button>
+      <button class="tag-btn" onclick="quickSearch('anxiety')">Anxiety</button>
     </div>
 
-    <div id="results-card" style="display: none;">
-      <span id="res-badge" class="category-badge"></span>
-      <h1 id="res-title"></h1>
+    <article id="results-card" style="display: none;">
+      <span id="res-badge" class="category-badge">Category</span>
+      <h1 id="res-title">Condition Title</h1>
       
       <div class="info-section">
         <h3 id="res-what-label">What is it?</h3>
-        <p id="res-what-text"></p>
+        <p id="res-what-text">Explanation paragraph...</p>
       </div>
 
       <div class="info-section">
         <h3 id="res-lifestyle-label">General Lifestyle Recommendations:</h3>
         <div id="res-action-grid" class="action-grid"></div>
       </div>
-    </div>
+    </article>
 
-    <p class="disclaimer"><strong>Disclaimer:</strong> Educational project only based on public CDC/NIH resources. Not medical advice, diagnosis, or treatment.</p>
+    <footer class="disclaimer">
+      <p><strong>Medical Disclaimer:</strong> This tool is for educational purposes only and does not replace medical advice from a doctor.</p>
+    </footer>
+
   </main>
 
   <script src="script.js"></script>
