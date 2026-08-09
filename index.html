@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clear Healte</title>
+  <title>Clear Health</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 </head>
@@ -16,7 +16,7 @@
         <span class="cross-line cross-h"></span>
       </div>
       <div class="logo-text">
-        Health<span class="logo-accent">Translate</span>
+        Clear <span class="logo-accent">Health</span>
       </div>
     </div>
     
@@ -60,18 +60,18 @@
     </div>
 
     <article id="results-card" style="display: none;">
+      <span id="res-badge" class="category-badge">Category</span>
+      
       <div class="card-header-row">
-        <span id="res-badge" class="category-badge">Category</span>
-        <button id="audio-btn" class="audio-btn" onclick="toggleAudio()" title="Listen to explanation">
+        <h1 id="res-title">Condition Title</h1>
+        <button id="listen-btn" class="listen-btn" onclick="speakExplanation()" aria-label="Listen to explanation">
           <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
-          <span id="audio-btn-text">Listen</span>
+          <span id="listen-btn-text">Listen</span>
         </button>
       </div>
-
-      <h1 id="res-title">Condition Title</h1>
       
       <div class="info-section">
         <h3 id="res-what-label">What is it?</h3>
@@ -85,7 +85,7 @@
     </article>
 
     <footer class="disclaimer">
-      <p><strong>Medical Disclaimer:</strong> This tool is for educational purposes only and does not replace medical advice from a doctor.</p>
+      <p><strong>Medical Disclaimer:</strong> Clear Health is for educational purposes only and does not replace medical advice from a doctor.</p>
     </footer>
 
   </main>
