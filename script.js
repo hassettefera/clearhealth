@@ -1,6 +1,5 @@
 let currentLang = 'en';
 let activeConditionId = '';
-let activeCategoryFilter = 'all';
 
 // Register Service Worker for Offline Functionality (PWA)
 if ('serviceWorker' in navigator) {
@@ -14,16 +13,21 @@ function toggleTheme() {
   const currentTheme = document.body.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.body.setAttribute('data-theme', newTheme);
-  
-  // Save preference
   localStorage.setItem('theme', newTheme);
 }
 
-// Load saved theme choice
+// UI Setup & Keyboard Shortcuts
 document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.body.setAttribute('data-theme', savedTheme);
-  initSearchEngine();
+
+  // Enable "Enter" key press on search input
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') runSearch();
+    });
+  }
 });
 
 // Interface Translations
@@ -31,7 +35,7 @@ const uiTranslations = {
   en: {
     title: "Medical information, simplified.",
     subtitle: "Understand your health in simple, everyday language.",
-    placeholder: "Search a condition (e.g., Diabetes, Asthma)...",
+    placeholder: "Search a condition (e.g., Diabetes, Flu, Gout)...",
     button: "Search",
     whatLabel: "What is it?",
     lifestyleLabel: "Simple Daily Tips:",
@@ -40,7 +44,7 @@ const uiTranslations = {
   es: {
     title: "Información médica, simplificada.",
     subtitle: "Comprenda su salud en un lenguaje sencillo y cotidiano.",
-    placeholder: "Busque una condición (ej. Diabetes)...",
+    placeholder: "Busque una condición (ej. Diabetes, Gripe)...",
     button: "Buscar",
     whatLabel: "¿Qué es?",
     lifestyleLabel: "Consejos diarios sencillos:",
@@ -49,7 +53,7 @@ const uiTranslations = {
   zh: {
     title: "医学信息，通俗易懂。",
     subtitle: "用最简单的日常语言了解您的健康状况。",
-    placeholder: "输入疾病名称 (例如：糖尿病)...",
+    placeholder: "输入疾病名称 (例如：糖尿病、流感)...",
     button: "搜索",
     whatLabel: "简单来说是什么？",
     lifestyleLabel: "日常小贴士：",
@@ -67,7 +71,7 @@ const uiTranslations = {
   vi: {
     title: "Thông tin y tế, đơn giản hóa.",
     subtitle: "Hiểu sức khỏe của bạn bằng ngôn ngữ bình dân dễ hiểu.",
-    placeholder: "Nhập tên bệnh (ví dụ: Tiểu Đường)...",
+    placeholder: "Nhập tên bệnh (ví dụ: Cúm, Bệnh Gút)...",
     button: "Tìm kiếm",
     whatLabel: "Nó là gì?",
     lifestyleLabel: "Mẹo nhỏ hàng ngày:",
@@ -106,7 +110,7 @@ const medicalDatabase = [
   },
   {
     id: 'diabetes',
-    keywords: ['diabetes', 'high blood sugar', 'azucar alta', '糖尿病', 'ስኳር በሽታ', 'tiểu đường'],
+    keywords: ['diabetes', 'high blood sugar', 'azucar alta', 'sugar', '糖尿病', 'ስኳር በሽታ', 'tiểu đường'],
     category: { en: 'Heart & Blood', es: 'Corazón y Sangre', zh: '心脏与血液', am: 'ልብ እና ደም', vi: 'Tim & Máu' },
     title: { en: 'Diabetes (High Sugar)', es: 'Diabetes (Azúcar Alta)', zh: '糖尿病', am: 'ስኳር በሽታ', vi: 'Bệnh Tiểu Đường' },
     emergency: {
@@ -155,7 +159,7 @@ const medicalDatabase = [
       es: ["<strong>Descanse totalmente:</strong> Quédese en casa para que su cuerpo luche contra el virus.", "<strong>Tome líquidos tibios:</strong> Té o caldos evitan la deshidratación y calman la garganta."],
       zh: ["<strong>充分休息：</strong> 待在家中，以便身体能集中精力对抗病毒。", "<strong>补充温热流质：</strong> 茶水和汤水能防止脱水并缓解咽喉不适。"],
       am: ["<strong>በቂ እረፍት ማድረግ፦</strong> ሰውነትዎ ቫይረሱን እንዲዋጋ ቤትዎ ያርፉ።", "<strong>ሞቅ ያለ ፈሳሽ መጠጣት፦</strong> ሻይ እና ሾርባ መጠጣት ድርቀትን ይከላከላል።"],
-      vi: ["<strong>Nghỉ ngơi tuyệt đối:</strong> Ở nhà để cơ thể dồn sức chống lại vi-rút.", "<strong>Uống nhiều nước ấm:</strong> Nước ấm, trà hoặc canh giúp chống mất nước và dịu cổ họng."]
+      vi: ["<strong>Nghỉ ngơi tuyệt đối:</strong> Ở nhà để cơ thể dồn sức chống lại vi-rút.", "<strong>Uống nước ấm:</strong> Nước ấm, trà hoặc canh giúp chống mất nước và dịu cổ họng."]
     }
   },
   {
@@ -452,7 +456,7 @@ const medicalDatabase = [
       es: ["<strong>Descanse en lo oscuro:</strong> Apague luces y pantallas en cuanto empiece el dolor.", "<strong>Tome agua pronto:</strong> La falta de agua es la causa principal."],
       zh: ["<strong>在暗处休息：</strong> 感觉头痛开始时，立刻关掉灯光和屏幕。", "<strong>及时喝水：</strong> 脱水是引发偏头痛的常见原因。"],
       am: ["<strong>ጨለማ ክፍል ማረፍ፦</strong> ህመሙ ሲጀምር መብራት እና ስልክ ያጥፉ።", "<strong>ውሃ መጠጣት፦</strong> የውሃ እጥረት ለራስ ምታት ዋነኛ ምክንያት ነው።"],
-      vi: ["<strong>Nghỉ ngơi trong phòng tối:</strong> Tắt đèn và màn hình ngay khi đau.", "<strong>Uống nước sớm:</strong> Thiếu nước là nguyên nhân hàng đầu gây đau nửa đầu."]
+      vi: ["<strong>Nghỉ ngơi trong phòng tối:</strong> Tắt đèn và màn形 ngay khi đau.", "<strong>Uống nước sớm:</strong> Thiếu nước là nguyên nhân hàng đầu gây đau nửa đầu."]
     }
   },
   {
@@ -484,63 +488,63 @@ const medicalDatabase = [
   }
 ];
 
-let fuseInstance;
+// Pure JS Search Function
+function runSearch() {
+  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const card = document.getElementById('results-card');
+  
+  if (!query) return;
 
-function initSearchEngine() {
-  if (typeof Fuse !== 'undefined') {
-    fuseInstance = new Fuse(medicalDatabase, {
-      includeScore: true,
-      threshold: 0.4,
-      keys: ['keywords', 'id']
-    });
+  // Search through IDs, keywords, and localized titles
+  const matched = medicalDatabase.find(item => {
+    const inId = item.id.toLowerCase().includes(query);
+    const inKeywords = item.keywords.some(k => k.toLowerCase().includes(query));
+    const inTitles = Object.values(item.title).some(t => t.toLowerCase().includes(query));
+    return inId || inKeywords || inTitles;
+  });
+
+  if (matched) {
+    activeConditionId = matched.id;
+    renderCard();
+  } else {
+    // Show clean, cute empty state without unneeded extra labels
+    card.style.display = 'block';
+    document.getElementById('res-badge').innerText = '✨ Stay Healthy';
+    document.getElementById('res-title').innerText = 'Condition Not Added Yet 🌸';
+    
+    // Hide extra section headers when not found
+    document.getElementById('res-what-label').style.display = 'none';
+    document.getElementById('res-lifestyle-label').style.display = 'none';
+    
+    document.getElementById('res-what-text').innerText = `We don't have entry for "${query}" in our database yet! Try searching for terms like Diabetes, Flu, Gout, or Asthma.`;
+    document.getElementById('res-action-grid').innerHTML = '';
+    document.getElementById('emergency-box').style.display = 'none';
   }
 }
 
-// Fixed Filter Chips Functionality
-function filterByCategory(categoryName, element) {
-  activeCategoryFilter = categoryName;
-
-  // Update active chip styling
+// Category Filter Chip Logic
+function filterByCategory(categoryKey, element) {
   const chips = document.querySelectorAll('.chip-btn');
   chips.forEach(chip => chip.classList.remove('active'));
   if (element) {
     element.classList.add('active');
   }
 
-  if (categoryName === 'all') {
+  if (categoryKey === 'all') {
     document.getElementById('results-card').style.display = 'none';
     activeConditionId = '';
     return;
   }
 
-  // Find condition matching selected category
-  const match = medicalDatabase.find(item => item.category.en === categoryName);
+  const match = medicalDatabase.find(item => {
+    return Object.values(item.category).some(cat => cat.toLowerCase().includes(categoryKey.toLowerCase()));
+  });
+
   if (match) {
     activeConditionId = match.id;
     renderCard();
   } else {
     document.getElementById('results-card').style.display = 'none';
-  }
-}
-
-function runSearch() {
-  const query = document.getElementById('search-input').value.toLowerCase().trim();
-  const card = document.getElementById('results-card');
-  if (!query) return;
-
-  if (!fuseInstance) initSearchEngine();
-
-  const results = fuseInstance ? fuseInstance.search(query) : [];
-  if (results.length > 0) {
-    activeConditionId = results[0].item.id;
-    renderCard();
-  } else {
-    card.style.display = 'block';
-    document.getElementById('res-badge').innerText = 'Notice';
-    document.getElementById('res-title').innerText = 'Condition Not Found';
-    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try searching for terms like "Diabetes", "Flu", or "Asthma".`;
-    document.getElementById('res-action-grid').innerHTML = '';
-    document.getElementById('emergency-box').style.display = 'none';
   }
 }
 
@@ -572,11 +576,15 @@ function renderCard() {
   const condition = medicalDatabase.find(item => item.id === activeConditionId);
   if (!condition) return;
 
+  // Make sure labels are visible for found conditions
+  document.getElementById('res-what-label').style.display = 'block';
+  document.getElementById('res-lifestyle-label').style.display = 'block';
+
   document.getElementById('res-badge').innerText = condition.category[currentLang] || condition.category.en;
   document.getElementById('res-title').innerText = condition.title[currentLang] || condition.title.en;
   document.getElementById('res-what-text').innerText = condition.whatIsIt[currentLang] || condition.whatIsIt.en;
 
-  // Emergency Alert Box
+  // Emergency Box
   const emergencyBox = document.getElementById('emergency-box');
   if (condition.emergency) {
     document.getElementById('res-emergency-text').innerText = condition.emergency[currentLang] || condition.emergency.en;
@@ -585,7 +593,7 @@ function renderCard() {
     emergencyBox.style.display = 'none';
   }
 
-  // Lifestyle Grid
+  // Lifestyle Tips Grid
   const actionGrid = document.getElementById('res-action-grid');
   actionGrid.innerHTML = '';
   const items = condition.lifestyle[currentLang] || condition.lifestyle.en;
