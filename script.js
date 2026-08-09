@@ -14,7 +14,8 @@ function toggleTheme() {
   const currentTheme = document.body.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.body.setAttribute('data-theme', newTheme);
-  document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '☀️' : '🌙';
+  
+  // Save preference
   localStorage.setItem('theme', newTheme);
 }
 
@@ -22,7 +23,6 @@ function toggleTheme() {
 document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.body.setAttribute('data-theme', savedTheme);
-  document.getElementById('theme-toggle').innerText = savedTheme === 'dark' ? '☀️' : '🌙';
   initSearchEngine();
 });
 
@@ -75,7 +75,7 @@ const uiTranslations = {
   }
 };
 
-// Expanded Database with Emergency Callouts
+// Full Medical Database
 const medicalDatabase = [
   {
     id: 'blood_pressure',
@@ -496,24 +496,30 @@ function initSearchEngine() {
   }
 }
 
+// Fixed Filter Chips Functionality
 function filterByCategory(categoryName, element) {
   activeCategoryFilter = categoryName;
 
-  // Update active chip UI button
+  // Update active chip styling
   const chips = document.querySelectorAll('.chip-btn');
   chips.forEach(chip => chip.classList.remove('active'));
-  element.classList.add('active');
+  if (element) {
+    element.classList.add('active');
+  }
 
   if (categoryName === 'all') {
     document.getElementById('results-card').style.display = 'none';
+    activeConditionId = '';
     return;
   }
 
-  // Find first condition matching selected category
+  // Find condition matching selected category
   const match = medicalDatabase.find(item => item.category.en === categoryName);
   if (match) {
     activeConditionId = match.id;
     renderCard();
+  } else {
+    document.getElementById('results-card').style.display = 'none';
   }
 }
 
@@ -532,7 +538,7 @@ function runSearch() {
     card.style.display = 'block';
     document.getElementById('res-badge').innerText = 'Notice';
     document.getElementById('res-title').innerText = 'Condition Not Found';
-    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try searching for terms like "Diabetes" or "Asthma".`;
+    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try searching for terms like "Diabetes", "Flu", or "Asthma".`;
     document.getElementById('res-action-grid').innerHTML = '';
     document.getElementById('emergency-box').style.display = 'none';
   }
