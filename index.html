@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HealthTranslate</title>
+  <title>Clear Healte</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 </head>
@@ -36,7 +36,7 @@
     
     <section class="hero-section">
       <h2 id="search-title">Medical information, simplified.</h2>
-      <p id="search-subtitle" class="subtitle">Understand your diagnosis and next steps in clear, everyday language.</p>
+      <p id="search-subtitle" class="subtitle">Understand your health in simple, everyday language.</p>
     </section>
 
     <div class="search-box">
@@ -60,7 +60,17 @@
     </div>
 
     <article id="results-card" style="display: none;">
-      <span id="res-badge" class="category-badge">Category</span>
+      <div class="card-header-row">
+        <span id="res-badge" class="category-badge">Category</span>
+        <button id="audio-btn" class="audio-btn" onclick="toggleAudio()" title="Listen to explanation">
+          <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span id="audio-btn-text">Listen</span>
+        </button>
+      </div>
+
       <h1 id="res-title">Condition Title</h1>
       
       <div class="info-section">
@@ -69,7 +79,7 @@
       </div>
 
       <div class="info-section">
-        <h3 id="res-lifestyle-label">General Lifestyle Recommendations:</h3>
+        <h3 id="res-lifestyle-label">Simple Daily Tips:</h3>
         <div id="res-action-grid" class="action-grid"></div>
       </div>
     </article>
