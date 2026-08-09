@@ -1,0 +1,15 @@
+{
+  "name": "Clear Health",
+  "short_name": "ClearHealth",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FAF8F2",
+  "theme_color": "#3E6985",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
