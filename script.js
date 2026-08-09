@@ -5,570 +5,535 @@ let activeConditionId = '';
 const uiTranslations = {
   en: {
     title: "Medical information, simplified.",
-    subtitle: "Understand your diagnosis and next steps in clear, everyday language.",
+    subtitle: "Understand your health in simple, everyday language.",
     placeholder: "Search a condition (e.g., Diabetes, Asthma)...",
     button: "Search",
     whatLabel: "What is it?",
-    lifestyleLabel: "General Lifestyle Recommendations:"
+    lifestyleLabel: "Simple Daily Tips:"
   },
   es: {
     title: "Información médica, simplificada.",
-    subtitle: "Comprenda su diagnóstico y los siguientes pasos en un lenguaje sencillo y cotidiano.",
+    subtitle: "Comprenda su salud en un lenguaje sencillo y cotidiano.",
     placeholder: "Busque una condición (ej. Diabetes)...",
     button: "Buscar",
     whatLabel: "¿Qué es?",
-    lifestyleLabel: "Recomendaciones generales de estilo de vida:"
+    lifestyleLabel: "Consejos diarios sencillos:"
   },
   zh: {
     title: "医学信息，通俗易懂。",
-    subtitle: "用清晰、日常的语言了解您的诊断和后续步骤。",
+    subtitle: "用最简单的日常语言了解您的健康状况。",
     placeholder: "输入疾病名称 (例如：糖尿病)...",
     button: "搜索",
-    whatLabel: "它是什么？",
-    lifestyleLabel: "日常生活建议："
+    whatLabel: "简单来说是什么？",
+    lifestyleLabel: "日常小贴士："
   },
   am: {
     title: "የሕክምና መረጃ፣ በቀላሉ የቀረበ።",
-    subtitle: "የምርመራ ውጤትዎን እና የሚቀጥሉትን እርምጃዎች ግልጽ በሆነ የዕለት ተዕለት ቋንቋ ይረዱ።",
+    subtitle: "ስለ ጤናዎ በቀላል የዕለት ተዕለት ቋንቋ ይረዱ።",
     placeholder: "የበሽታውን ስም ያስገቡ (ምሳሌ፦ ስኳር በሽታ)...",
     button: "ፈልግ",
     whatLabel: "ምንድን ነው?",
-    lifestyleLabel: "አጠቃላይ የአኗኗር ዘይቤ ምክሮች፦"
+    lifestyleLabel: "ቀላል የዕለት ተዕለት ምክሮች፦"
   },
   vi: {
     title: "Thông tin y tế, đơn giản hóa.",
-    subtitle: "Hiểu chẩn đoán của bạn và các bước tiếp theo bằng ngôn ngữ dễ hiểu hàng ngày.",
+    subtitle: "Hiểu sức khỏe của bạn bằng ngôn ngữ bình dân dễ hiểu.",
     placeholder: "Nhập tên bệnh (ví dụ: Tiểu Đường)...",
     button: "Tìm kiếm",
     whatLabel: "Nó là gì?",
-    lifestyleLabel: "Khuyến nghị lối sống chung:"
+    lifestyleLabel: "Mẹo nhỏ hàng ngày:"
   }
 };
 
-// Medical Database (15 Conditions)
+// Medical Database - Rewritten for Plain English (No Jargon)
 const medicalDatabase = [
   {
     id: 'blood_pressure',
     keywords: ['high blood pressure', 'hypertension', 'blood pressure', 'presion alta', '高血压', 'ደም ግፊት', 'cao huyết áp'],
-    category: { en: 'Heart Health', es: 'Salud del Corazón', zh: '心脏健康', am: 'የልብ ጤና', vi: 'Sức Khỏe Tim Mạch' },
-    title: { en: 'High Blood Pressure (Hypertension)', es: 'Presión Arterial Alta (Hipertensión)', zh: '高血压 (Hypertension)', am: 'ከፍተኛ የደም ግፊት', vi: 'Cao Huyết Áp' },
+    category: { en: 'Heart & Blood', es: 'Corazón y Sangre', zh: '心脏与血液', am: 'ልብ እና ደም', vi: 'Tim & Máu' },
+    title: { en: 'High Blood Pressure', es: 'Presión Arterial Alta', zh: '高血压', am: 'ከፍተኛ የደም ግፊት', vi: 'Cao Huyết Áp' },
     whatIsIt: {
-      en: "Imagine your blood vessels are like a garden hose. High blood pressure means blood pushes too hard against the inside walls, stressing your heart over time.",
-      es: "Imagine que sus vasos sanguíneos son como una manguera de jardín. La presión alta significa que la sangre empuja con demasiada fuerza contra el interior.",
-      zh: "想象一下，您的血管就像一根水管。高血压意味着血液在血管内推得太用力，久而久之会增加心脏负担。",
-      am: "የደም ሥሮችዎን ልክ እንደ ውሃ ቱቦ ያስቡ። ከፍተኛ የደም ግፊት ማለት ደም በቱቦው ውስጥ በጣም በኃይል እየገፋ ነው ማለት ነው።",
-      vi: "Hãy tưởng tượng mạch máu giống như vòi nước. Cao huyết áp có nghĩa là máu đang đẩy quá mạnh vào thành ống."
+      en: "Think of your blood vessels like a garden hose. High blood pressure means the fluid inside is pushing way too hard against the hose walls, which wears out your heart over time.",
+      es: "Piense en sus venas como una manguera de jardín. La presión alta significa que el agua empuja demasiado fuerte las paredes de la manguera, lo que cansa a su corazón.",
+      zh: "把您的血管想象成水管。高血压意味着里面的血液对水管壁的推力过大，时间久了会让心脏吃不消。",
+      am: "የደም ሥሮችዎን እንደ ውሃ ቱቦ ያስቡ። ከፍተኛ የደም ግፊት ማለት በውስጡ ያለው ደም በቱቦው ግድግዳ ላይ በጣም በኃይል እየገፋ ነው ማለት ነው፡",
+      vi: "Hãy tưởng tượng mạch máu như vòi nước. Cao huyết áp là khi dòng máu đẩy quá mạnh vào thành ống, làm tim mệt mỏi theo thời gian."
     },
     lifestyle: {
       en: [
-        "<strong>Eat Balanced:</strong> Choose fresh foods and reduce processed salt intake.",
-        "<strong>Stay Active:</strong> Engage in daily light movement like walking for 30 minutes."
+        "<strong>Cut Back on Salt:</strong> Too much salt makes your body hold onto extra water, raising pressure.",
+        "<strong>Daily Walk:</strong> A simple 20 to 30 minute walk helps your heart relax."
       ],
       es: [
-        "<strong>Alimentación equilibrada:</strong> Elija alimentos frescos y reduzca el consumo de sal.",
-        "<strong>Actividad diaria:</strong> Realice caminatas de 30 minutos todos los días."
+        "<strong>Menos sal:</strong> La sal hace que el cuerpo retenga agua y suba la presión.",
+        "<strong>Caminata diaria:</strong> Caminar 20 o 30 minutos ayuda a relajar el corazón."
       ],
       zh: [
-        "<strong>均衡饮食：</strong> 选择新鲜食物，减少加工盐摄入。",
-        "<strong>保持运动：</strong> 每天进行30分钟的散步等轻度运动。"
+        "<strong>少吃盐：</strong> 盐分太多数体会积聚多余水分，推高血压。",
+        "<strong>每天散步：</strong> 散步20到30分钟有助于让心脏放松。"
       ],
       am: [
-        "<strong>ጤናማ ምግብ፦</strong> ትኩስ ምግቦችን ይምረጡ እና የጨው መጠን ይቀንሱ።",
-        "<strong>የነቃ እንቅስቃሴ፦</strong> በየቀኑ ለ30 ደቂቃ ያህል ይራመዱ።"
+        "<strong>ጨው መቀነስ፦</strong> ብዙ ጨው በሰውነት ውስጥ ውሃ እንዲከማች በማድረግ ግፊትን ይጨምራል።",
+        "<strong>የቀን ጉዞ፦</strong> በቀን ለ20-30 ደቂቃ መራመድ ልብን ያረጋጋል።"
       ],
       vi: [
-        "<strong>Ăn uống cân bằng:</strong> Chọn thực phẩm tươi và giảm lượng muối.",
-        "<strong>Vận động hàng ngày:</strong> Đi bộ khoảng 30 phút mỗi ngày."
+        "<strong>Giảm ăn muối:</strong> Ăn nhiều muối làm cơ thể tích nước, làm tăng áp lực.",
+        "<strong>Đi bộ hàng ngày:</strong> Đi bộ 20-30 phút giúp tim thư giãn hơn."
       ]
     }
   },
   {
     id: 'diabetes',
     keywords: ['diabetes', 'high blood sugar', 'azucar alta', '糖尿病', 'ስኳር በሽታ', 'tiểu đường'],
-    category: { en: 'Metabolism', es: 'Metabolismo', zh: '新陈代谢', am: 'ሜታቦሊዝም', vi: 'Chuyển Hóa' },
-    title: { en: 'Diabetes (High Blood Sugar)', es: 'Diabetes (Azúcar Alta)', zh: '糖尿病', am: 'ስኳር በሽታ', vi: 'Bệnh Tiểu Đường' },
+    category: { en: 'Energy & Sugar', es: 'Energía y Azúcar', zh: '能量与血糖', am: 'ጉልበት እና ስኳር', vi: 'Năng Lượng & Đường' },
+    title: { en: 'Diabetes (High Sugar)', es: 'Diabetes (Azúcar Alta)', zh: '糖尿病', am: 'ስኳር በሽታ', vi: 'Bệnh Tiểu Đường' },
     whatIsIt: {
-      en: "Your body uses insulin like a key to let food sugar enter cells for energy. Diabetes occurs when the body struggles to use this key, leaving sugar in the bloodstream.",
-      es: "El cuerpo usa la insulina como una llave para que el azúcar de los alimentos entre a las células. La diabetes ocurre cuando cuesta usar esta llave.",
-      zh: "身体使用胰岛素作为“钥匙”让食物中的糖进入细胞以提供能量。当身体难以使用这把钥匙时，就会导致糖留在血液中。",
-      am: "ሰውነትዎ ስኳርን ወደ ህዋሳት ለማስገባት ኢንሱሊን የሚባል ቁልፍ ይጠቀማል። ስኳር በሽታ ማለት ሰውነትዎ ይህንን ቁልፍ ለመጠቀም ሲቸገር ነው።",
-      vi: "Cơ thể dùng insulin như chìa khóa để đưa đường vào tế bào. Bệnh tiểu đường xảy ra khi cơ thể gặp khó khăn khi dùng chìa khóa này."
+      en: "When you eat, food turns into sugar for energy. Diabetes means your body loses its ability to move that sugar into your muscle cells, leaving it trapped floating in your blood.",
+      es: "Al comer, la comida se convierte en azúcar para dar energía. La diabetes pasa cuando el cuerpo no puede mover ese azúcar a los músculos, dejándolo atrapado en la sangre.",
+      zh: "吃东西时，食物会变成糖来提供能量。糖尿病意味着身体没办法把糖送进肌肉里，导致糖卡在血液中。",
+      am: "ምግብ ሲመገቡ ወደ ስኳር ተለውጦ ጉልበት ይሰጣል። ስኳር በሽታ ማለት ሰውነትዎ ያንን ስኳር ወደ ህዋሳት ማስገባት ሲያቅተው ነው።",
+      vi: "Khi ăn, thức ăn biến thành đường để tạo năng lượng. Bệnh tiểu đường là khi cơ thể không đưa được đường vào tế bào, khiến đường bị kẹt lại trong máu."
     },
     lifestyle: {
       en: [
-        "<strong>Plate Balance:</strong> Emphasize vegetables and whole grains over sugary drinks.",
-        "<strong>Regular Exercise:</strong> Routine physical activity helps body cells manage energy."
+        "<strong>Watch Soda & Juice:</strong> Drink water or tea instead of sugary drinks.",
+        "<strong>Move After Eating:</strong> A quick walk after meals helps clear sugar out of your blood."
       ],
       es: [
-        "<strong>Plato balanceado:</strong> Consuma más verduras y evite las bebidas azucaradas.",
-        "<strong>Ejercicio regular:</strong> La actividad física rutinaria ayuda a procesar la energía."
+        "<strong>Cuidado con los refrescos:</strong> Tome agua en lugar de bebidas dulces.",
+        "<strong>Muévase tras comer:</strong> Caminar un poco después de comer ayuda a bajar el azúcar."
       ],
       zh: [
-        "<strong>饮食平衡：</strong> 多吃蔬菜和全谷物，少喝含糖饮料。",
-        "<strong>定期运动：</strong> 日常身体活动有助于细胞更好地利用能量。"
+        "<strong>少喝甜饮：</strong> 用白开水或茶代替含糖饮料和果汁。",
+        "<strong>饭后走走：</strong> 饭后散散步能帮助消耗血液中的糖分。"
       ],
       am: [
-        "<strong>የተመጣጠነ ምግብ፦</strong> ጣፋጭ መጠጦችን ይቀንሱ እና አትክልቶችን ያብዙ።",
-        "<strong>አካል ብቃት እንቅስቃሴ፦</strong> መደበኛ እንቅስቃሴ ማድረግ ሰውነትን ይረዳል።"
+        "<strong>ለጣፋጭ መጠጦች ጥንቃቄ፦</strong> በጣፋጭ መጠጦች பதிலாக ውሃ ይጠጡ።",
+        "<strong>ከተመገቡ በኋላ መራመድ፦</strong> ከምግብ በኋላ መራመድ በደም ውስጥ ያለውን ስኳር ለመቀነስ ይረዳል።"
       ],
       vi: [
-        "<strong>Cân bằng bữa ăn:</strong> Ăn nhiều rau xanh và hạn chế đồ uống có đường.",
-        "<strong>Tập thể dục đều đặn:</strong> Vận động giúp cơ thể sử dụng năng lượng tốt hơn."
-      ]
-    }
-  },
-  {
-    id: 'asthma',
-    keywords: ['asthma', 'breathing trouble', 'asma', '哮喘', 'አስም', 'hen suyễn'],
-    category: { en: 'Respiratory', es: 'Respiratorio', zh: '呼吸系统', am: 'የመተንፈሻ አካላት', vi: 'Hô Hấp' },
-    title: { en: 'Asthma', es: 'Asma', zh: '哮喘 (Asthma)', am: 'አስም (Asthma)', vi: 'Bệnh Hen Suyễn' },
-    whatIsIt: {
-      en: "Asthma causes the airways in the lungs to narrow and swell temporarily. This feels similar to trying to breathe through a narrow drinking straw.",
-      es: "El asma hace que las vías respiratorias de los pulmones se estrechen e hinchen temporalmente, como respirar a través de un popote estrecho.",
-      zh: "哮喘会导致肺部气道暂时变窄和肿胀，感觉就像试图通过一根细吸管呼吸一样。",
-      am: "አስም በሳንባ ውስጥ ያሉ የመተንፈሻ ቱቦዎች በጊዜያዊነት እንዲጠቡ ያደርጋል። ይህም በጠባብ ቱቦ ለመተንፈስ እንደመሞከር ነው።",
-      vi: "Bệnh hen suyễn làm các đường thở trong phổi tạm thời bị thu hẹp và sưng lên, giống như cố gắng thở qua một ống hút nhỏ."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Clean Environment:</strong> Keep home spaces clean and free of dust or heavy smoke.",
-        "<strong>Pollen Awareness:</strong> Monitor airborne triggers during seasonal changes."
-      ],
-      es: [
-        "<strong>Entorno limpio:</strong> Mantenga el hogar libre de polvo y humo de cigarrillo.",
-        "<strong>Atención al polen:</strong> Tenga cuidado con los alérgenos ambientales de temporada."
-      ],
-      zh: [
-        "<strong>环境清洁：</strong> 保持居住空间干净，避免灰尘和烟雾。",
-        "<strong>注意花粉：</strong> 在换季时注意过敏原的变化。"
-      ],
-      am: [
-        "<strong>ፅዳት መጠበቅ፦</strong> የመኖሪያ ቦታዎን ከአቧራ እና ከጢስ ነፃ ያድርጉ።",
-        "<strong>ወቅታዊ ጥንቃቄ፦</strong> በወቅት ለውጥ ወቅት የአየር ሁኔታዎችን ይከታተሉ።"
-      ],
-      vi: [
-        "<strong>Môi trường sạch:</strong> Giữ không gian sống sạch sẽ, tránh bụi và khói.",
-        "<strong>Theo dõi thời tiết:</strong> Chú ý các tác nhân dị ứng khi thay đổi mùa."
-      ]
-    }
-  },
-  {
-    id: 'cholesterol',
-    keywords: ['cholesterol', 'high cholesterol', 'colesterol', '胆固醇', 'ኮሌስትሮል'],
-    category: { en: 'Heart Health', es: 'Salud del Corazón', zh: '心脏健康', am: 'የልብ ጤና', vi: 'Sức Khỏe Tim Mạch' },
-    title: { en: 'High Cholesterol', es: 'Colesterol Alto', zh: '高胆固醇', am: 'ከፍተኛ ኮሌስትሮል', vi: 'Cholesterol Cao' },
-    whatIsIt: {
-      en: "Cholesterol is a soft substance in the blood. When levels are high, extra deposits can collect along vessel walls over time.",
-      es: "El colesterol es una sustancia suave en la sangre. Cuando sus niveles son altos, se puede acumular gradualmente en los vasos.",
-      zh: "胆固醇是血液中的一种软质物质。当浓度过高时，多余的沉淀物会随时间积聚在血管壁上。",
-      am: "ኮሌስትሮል በደም ውስጥ ያለ ለስላሳ ነገር ነው። መጠኑ ከፍተኛ በሚሆንበት ጊዜ በደም ሥሮች ላይ ሊከማች ይችላል።",
-      vi: "Cholesterol là một chất mềm trong máu. Khi mức cholesterol cao, nó có thể tích tụ dần dọc theo thành mạch."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Heart-Healthy Fats:</strong> Choose olive oil and nuts over heavily fried food.",
-        "<strong>Routine Movement:</strong> Incorporate daily walking into your regular routine."
-      ],
-      es: [
-        "<strong>Grasas saludables:</strong> Elija aceite de oliva y frutos secos en lugar de fritos.",
-        "<strong>Movimiento constante:</strong> Incorpore caminatas diarias a su rutina."
-      ],
-      zh: [
-        "<strong>健康脂肪：</strong> 选择橄榄油和坚果，减少油炸食物。",
-        "<strong>规律运动：</strong> 将日常散步融入日常生活中。"
-      ],
-      am: [
-        "<strong>ጤናማ ጮማ፦</strong> የጠበሱ ምግቦችን ይቀንሱ እና ጤናማ ዘይቶችን ይጠቀሙ።",
-        "<strong>የዘወትር እንቅስቃሴ፦</strong> በየቀኑ መራመድን ይለማመዱ።"
-      ],
-      vi: [
-        "<strong>Chất béo lành mạnh:</strong> Ưu tiên dầu oliu và hạt thay vì đồ chiên xào.",
-        "<strong>Vận động thường xuyên:</strong> Duy trì thói quen đi bộ hàng ngày."
-      ]
-    }
-  },
-  {
-    id: 'anemia',
-    keywords: ['anemia', 'iron', 'hierro', '贫血', 'አኔሚያ', 'thiếu máu'],
-    category: { en: 'Blood Health', es: 'Salud de la Sangre', zh: '血液健康', am: 'የደም ጤና', vi: 'Sức Khỏe Máu' },
-    title: { en: 'Anemia (Low Iron)', es: 'Anemia (Hierro Bajo)', zh: '贫血 (Anemia)', am: 'አኔሚያ (የደም ማነስ)', vi: 'Thiếu Máu' },
-    whatIsIt: {
-      en: "Anemia occurs when blood has fewer healthy red blood cells than normal, making it harder to deliver oxygen efficiently across the body.",
-      es: "La anemia ocurre cuando la sangre tiene menos glóbulos rojos de lo normal, dificultando el transporte de oxígeno.",
-      zh: "当血液中的健康红细胞少于正常水平时，就会发生贫血，使全身氧气的输送效率降低。",
-      am: "የደም ማነስ የሚከሰተው በደም ውስጥ በቂ የደም ሕዋሳት ሳይኖሩ ሲቀሩ ነው። ይህም ኦክስጅንን ለማሰራጨት ያከብዳል።",
-      vi: "Thiếu máu xảy ra khi máu có ít tế bào hồng cầu khỏe mạnh hơn bình thường, làm giảm hiệu quả vận chuyển oxy."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Nutrient-Rich Foods:</strong> Include leafy greens, lentils, and beans in daily meals.",
-        "<strong>Hydration & Rest:</strong> Ensure proper hydration and balance physical activity with rest."
-      ],
-      es: [
-        "<strong>Comida rica en nutrientes:</strong> Incluya vegetales de hoja verde y lentejas.",
-        "<strong>Hidratación y descanso:</strong> Manténgase hidratado y descanse adecuadamente."
-      ],
-      zh: [
-        "<strong>丰富营养：</strong> 在日常饮食中加入深绿色蔬菜、豆类等。",
-        "<strong>补水与休息：</strong> 保持充足的水分，合理安排休息。"
-      ],
-      am: [
-        "<strong>በፖታሺየም የበለፀጉ ምግቦች፦</strong> አትክልቶችን እና ምስርን በምግብዎ ውስጥ ያካቱ።",
-        "<strong>እረፍት እና ውሃ፦</strong> በቂ ውሃ ይጠጡ እና እረፍት ያድርጉ።"
-      ],
-      vi: [
-        "<strong>Thực phẩm giàu dinh dưỡng:</strong> Bổ sung rau xanh và các loại đậu vào bữa ăn.",
-        "<strong>Nghỉ ngơi và uống nước:</strong> Uống đủ nước và giữ thói quen nghỉ ngơi hợp lý."
-      ]
-    }
-  },
-  {
-    id: 'gerd',
-    keywords: ['gerd', 'acid reflux', 'heartburn', 'reflujo', '胃食管反流', 'የሆድ ቃጠሎ', 'trào ngược axit'],
-    category: { en: 'Digestive Health', es: 'Salud Digestiva', zh: '消化系统健康', am: 'የምግብ መፈጨት ጤና', vi: 'Sức Khỏe Tiêu Hóa' },
-    title: { en: 'Acid Reflux (GERD)', es: 'Reflujo Ácido (ERGE)', zh: '胃食管反流 (GERD)', am: 'የሆድ ቃጠሎ (GERD)', vi: 'Trào Ngược Axit' },
-    whatIsIt: {
-      en: "Acid reflux happens when stomach acid flows backward up into your food pipe. It creates a burning feeling in your chest known as heartburn.",
-      es: "El reflujo ocurre cuando el ácido del estómago sube hacia el esófago. Esto causa una sensación de ardor en el pecho.",
-      zh: "胃食管反流是指胃酸反向流入食道。这会在胸口产生灼烧感，即俗称的“心口灼热”。",
-      am: "የሆድ ቃጠሎ የሚከሰተው የሆድ አሲድ ወደ ጉሮሮዎ ወደኋላ ሲመለስ ነው። ይህም በደረትዎ ውስጥ የመቃጠል ስሜት ይፈጥራል።",
-      vi: "Trào ngược axit xảy ra khi axit dạ dày chảy ngược lên thực quản. Nó tạo ra cảm giác nóng rát ở ngực."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Eat Smaller Meals:</strong> Avoid lying down immediately after eating.",
-        "<strong>Limit Triggers:</strong> Reduce late-night snacks, spicy foods, and caffeine."
-      ],
-      es: [
-        "<strong>Comidas pequeñas:</strong> Evite acostarse inmediatamente después de comer.",
-        "<strong>Limite irritantes:</strong> Reduzca la comida picante, café y cenar tarde."
-      ],
-      zh: [
-        "<strong>少食多餐：</strong> 进食后避免立即躺下。",
-        "<strong>减少刺激食物：</strong> 减少深夜进食、辛辣食物和咖啡因。"
-      ],
-      am: [
-        "<strong>ትንሽ መመገብ፦</strong> ከተመገቡ በኋላ ወዲያውኑ ከመተኛት ይቆጠቡ።",
-        "<strong>የሚያቃጥሉ ምግቦችን መቀነስ፦</strong> ማታ ማታ መበላት እና ቡና መቀነስ።"
-      ],
-      vi: [
-        "<strong>Chia nhỏ bữa ăn:</strong> Tránh nằm ngay sau khi ăn.",
-        "<strong>Hạn chế đồ kích thích:</strong> Giảm ăn khuya, đồ cay và cà phê."
-      ]
-    }
-  },
-  {
-    id: 'migraine',
-    keywords: ['migraine', 'headache', 'dolor de cabeza', 'migraña', '偏头痛', 'የራስ ምታት', 'đau nửa đầu'],
-    category: { en: 'Brain & Nervous System', es: 'Sistema Nervioso', zh: '神经系统', am: 'የነርቭ ሥርዓት', vi: 'Hệ Thần Kinh' },
-    title: { en: 'Migraine', es: 'Migraña', zh: '偏头痛 (Migraine)', am: 'የራስ ምታት (Migraine)', vi: 'Đau Nửa Đầu' },
-    whatIsIt: {
-      en: "A migraine is an intense, throbbing headache that often targets one side of the head. It can make you sensitive to light and loud sounds.",
-      es: "La migraña es un dolor de cabeza intenso que suele afectar un solo lado. Puede hacerlo sensible a la luz y al ruido.",
-      zh: "偏头痛是一种剧烈的搏动性头痛，通常发作于头部一侧。它会让您对光线和声音变得非常敏感。",
-      am: "የራስ ምታት (Migraine) በጭንቅላትዎ በአንድ በኩል የሚከሰት ከፍተኛ ህመም ነው። ለብርሃን እና ለድምጽ ተጎጂ ያደርጋል።",
-      vi: "Đau nửa đầu là tình trạng đau đầu dữ dội, thường ở một bên đầu. Nó có thể khiến bạn nhạy cảm với ánh sáng và âm thanh."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Rest in the Dark:</strong> Stay in a quiet, dark room when symptoms start.",
-        "<strong>Consistent Sleep:</strong> Maintain regular sleep schedules and stay hydrated."
-      ],
-      es: [
-        "<strong>Descanse en la oscuridad:</strong> Permanezca en una habitación oscura y silenciosa.",
-        "<strong>Sueño regular:</strong> Mantenga horarios de sueño fijos y tome suficiente agua."
-      ],
-      zh: [
-        "<strong>黑暗中休息：</strong> 症状开始时保持在安静、昏暗的房间里。",
-        "<strong>规律作息：</strong> 保持规律的睡眠时间并多喝水。"
-      ],
-      am: [
-        "<strong>ጨለማ ቦታ እረፍት ማድረግ፦</strong> ህመሙ ሲጀምር ጸጥ ባለ ጨለማ ክፍል ውስጥ ያረፉ።",
-        "<strong>መደበኛ እንቅልፍ፦</strong> መደበኛ የእንቅልፍ ሰዓት ይኑርዎት እና በቂ ውሃ ይጠጡ።"
-      ],
-      vi: [
-        "<strong>Nghỉ ngơi trong phòng tối:</strong> Ở trong phòng yên tĩnh, tối khi bắt đầu đau.",
-        "<strong>Ngủ nghỉ đều đặn:</strong> Duy trì giờ giấc ngủ cố định và uống đủ nước."
-      ]
-    }
-  },
-  {
-    id: 'uti',
-    keywords: ['uti', 'urinary tract infection', 'infeccion urinaria', '尿路感染', 'የሽንት குழாய் ኢንፌክሽን', 'viêm đường tiết niệu'],
-    category: { en: 'Kidney & Urinary', es: 'Sistema Urinario', zh: '泌尿系统', am: 'የሽንት አካላት', vi: 'Hệ Tiết Niệu' },
-    title: { en: 'Urinary Tract Infection (UTI)', es: 'Infección del Tracto Urinario', zh: '尿路感染 (UTI)', am: 'የሽንት ቧንቧ ኢንፌክሽን', vi: 'Viêm Đường Tiết Niệu' },
-    whatIsIt: {
-      en: "A UTI occurs when everyday bacteria enter the urinary pathway. It causes a burning feeling during urination and a frequent urge to go.",
-      es: "Una UTI ocurre cuando entran bacterias al sistema urinario. Causa ardor al orinar y la necesidad constante de ir al baño.",
-      zh: "当细菌进入尿道时就会发生尿路感染。这会导致排尿时有灼烧感并频繁想上厕所。",
-      am: "የሽንት ቧንቧ ኢንፌክሽን የሚከሰተው ባክቴሪያ ወደ ሽንት ቧንቧ ሲገባ ነው። በሚሸኑበት ጊዜ የመቃጠል ስሜት ያመጣል።",
-      vi: "Viêm đường tiết niệu xảy ra khi vi khuẩn xâm nhập vào đường tiết niệu. Nó gây cảm giác nóng rát khi đi tiểu."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Increase Fluids:</strong> Drink plenty of water throughout the day.",
-        "<strong>Good Hygiene:</strong> Practice proper bathroom habits and avoid holding urine."
-      ],
-      es: [
-        "<strong>Aumente líquidos:</strong> Tome abundante agua durante todo el día.",
-        "<strong>Buena higiene:</strong> No aguante las ganas de orinar y mantenga buena higiene."
-      ],
-      zh: [
-        "<strong>多喝水：</strong> 全天保持充足的饮水量。",
-        "<strong>良好卫生：</strong> 养成良好的卫生习惯，切勿憋尿。"
-      ],
-      am: [
-        "<strong>ውሃ ማበዛት፦</strong> ቀኑን ሙሉ ብዙ ውሃ ይጠጡ።",
-        "<strong>ፅዳት መጠበቅ፦</strong> ሽንትዎን አለመያዝ እና ንፅህናን መጠበቅ።"
-      ],
-      vi: [
-        "<strong>Uống nhiều nước:</strong> Uống đủ nước trong suốt cả ngày.",
-        "<strong>Vệ sinh tốt:</strong> Giữ vệ sinh đúng cách và không nên nhịn tiểu."
-      ]
-    }
-  },
-  {
-    id: 'arthritis',
-    keywords: ['arthritis', 'joint pain', 'osteoarthritis', 'dolor articular', '关节炎', 'የአጥንት መገጣጠሚያ ህመም', 'viêm khớp'],
-    category: { en: 'Bones & Joints', es: 'Huesos y Articulaciones', zh: '骨骼与关节', am: 'አጥንት እና መገጣጠሚያ', vi: 'Xương & Khớp' },
-    title: { en: 'Joint Pain (Osteoarthritis)', es: 'Dolor Articular (Osteoartritis)', zh: '骨关节炎 (Osteoarthritis)', am: 'የመገጣጠሚያ ህመም', vi: 'Viêm Xương Khớp' },
-    whatIsIt: {
-      en: "Osteoarthritis occurs when protective cushioning between joints wears down over time. It can cause stiffness, swelling, and movement discomfort.",
-      es: "La osteoartritis ocurre cuando el amortiguador entre las articulaciones se desgasta, causando rigidez y dolor.",
-      zh: "骨关节炎是指保护关节的软骨随时间磨损。这会导致关节僵硬、肿胀和活动不便。",
-      am: "የመገጣጠሚያ ህመም የሚከሰተው በመገጣጠሚያዎች መካከል ያለው መከላከያ በጊዜ ሂደት ሲያልቅ ነው። ይህም የመገጣጠሚያዎች ጥንካሬ ያመጣል።",
-      vi: "Viêm xương khớp xảy ra khi lớp đệm bảo vệ giữa các khớp bị thoái hóa theo thời gian, gây cứng khớp và đau."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Low-Impact Exercise:</strong> Swimming or walking helps protect joint flexibility.",
-        "<strong>Gentle Stretching:</strong> Regular light stretches help reduce daily morning stiffness."
-      ],
-      es: [
-        "<strong>Ejercicio de bajo impacto:</strong> Nadar o caminar protege las articulaciones.",
-        "<strong>Estiramientos suaves:</strong> Estirar suavemente reduce la rigidez matutina."
-      ],
-      zh: [
-        "<strong>低强度运动：</strong> 游泳或散步有助于保持关节灵活性。",
-        "<strong>温和伸展：</strong> 定期做轻微拉伸有助于缓解晨起僵硬。"
-      ],
-      am: [
-        "<strong>ቀለል ያለ እንቅስቃሴ፦</strong> ዋና መዋኘት ወይም መራመድ መገጣጠሚያዎችን ይረዳል።",
-        "<strong>ቀለል ያለ ማሳሳት፦</strong> በየቀኑ አካልን ማሳሳት የጠዋት ጥንካሬን ይቀንሳል።"
-      ],
-      vi: [
-        "<strong>Tập thể dục nhẹ nhàng:</strong> Bơi lội hoặc đi bộ giúp bảo vệ sự linh hoạt của khớp.",
-        "<strong>Giãn cơ nhẹ:</strong> Giãn cơ đều đặn giúp giảm cứng khớp vào buổi sáng."
-      ]
-    }
-  },
-  {
-    id: 'anxiety',
-    keywords: ['anxiety', 'stress', 'ansiedad', 'estres', '焦虑', 'ጭንቀት', 'lo âu'],
-    category: { en: 'Mental Health', es: 'Salud Mental', zh: '心理健康', am: 'የአእምሮ ጤና', vi: 'Sức Khỏe Tâm Thần' },
-    title: { en: 'Generalized Anxiety', es: 'Ansiedad Generalizada', zh: '广泛性焦虑症', am: 'የጭንቀት ስሜት', vi: 'Rối Loạn Lo Âụ' },
-    whatIsIt: {
-      en: "Anxiety causes constant, overwhelming worry or feeling on edge. It can cause bodily symptoms like a rapid heartbeat and trouble relaxing.",
-      es: "La ansiedad causa preocupación constante y tensión. Puede provocar palpitaciones y dificultad para relajarse.",
-      zh: "焦虑会导致持续的过度的担忧或紧张感。它可能引发心跳加速和难以放松等身体症状。",
-      am: "የጭንቀት ስሜት የማያቋርጥ ፍርሃት እና ውጥረት ያመጣል። የልብ ምት ፍጥነት እና የመረጋጋት ችግር ሊያስከትል ይችላል።",
-      vi: "Lo âu gây ra cảm giác lo lắng hoặc căng thẳng liên tục. Nó có thể làm tim đập nhanh và khó thư giãn."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Breathing Exercises:</strong> Practice deep, slow breathing techniques daily.",
-        "<strong>Limit Stimulants:</strong> Reduce daily intake of coffee and energy drinks."
-      ],
-      es: [
-        "<strong>Ejercicios respiratorios:</strong> Practique técnicas de respiración profunda.",
-        "<strong>Limite estimulantes:</strong> Reduzca la ingesta de café y bebidas energéticas."
-      ],
-      zh: [
-        "<strong>呼吸练习：</strong> 每天练习深呼吸和缓慢呼吸技巧。",
-        "<strong>减少刺激物：</strong> 减少咖啡和功能饮料的摄入。"
-      ],
-      am: [
-        "<strong>የአተነፋፈስ ልምምድ፦</strong> በየቀኑ ጥልቅ አተነፋፈስን ይለማመዱ።",
-        "<strong>ቡና መቀነስ፦</strong> የቡና እና የኃይል መጠጦችን ይቀንሱ።"
-      ],
-      vi: [
-        "<strong>Tập hít thở:</strong> Thực hành các bài tập hít thở sâu hàng ngày.",
-        "<strong>Hạn chế chất kích thích:</strong> Giảm uống cà phê và nước tăng lực."
-      ]
-    }
-  },
-  {
-    id: 'sleep_apnea',
-    keywords: ['sleep apnea', 'snoring', 'apnea del sueño', 'ronquidos', '睡眠呼吸暂停', 'የእንቅልፍ ችግር', 'ngưng thở khi ngủ'],
-    category: { en: 'Respiratory', es: 'Respiratorio', zh: '呼吸系统', am: 'የመተንፈሻ አካላት', vi: 'Hô Hấp' },
-    title: { en: 'Sleep Apnea', es: 'Apnea del Sueño', zh: '睡眠呼吸暂停 (Sleep Apnea)', am: 'የእንቅልፍ አፕኒያ', vi: 'Ngưng Thở Khi Ngủ' },
-    whatIsIt: {
-      en: "Sleep apnea causes breathing to stop and start repeatedly while sleeping. It leads to loud snoring and feeling exhausted even after a full night's sleep.",
-      es: "La apnea del sueño hace que la respiración se detenga intermitentemente al dormir, provocando ronquidos y fatiga constante.",
-      zh: "睡眠呼吸暂停会导致睡眠时呼吸反复停止和开始。这会导致大声打鼾，即使睡满整晚也会感到疲惫。",
-      am: "የእንቅልፍ አፕኒያ በእንቅልፍ ወቅት መተንፈስ እንዲቆም እና እንዲመለስ ያደርጋል። ይህም ከፍተኛ ማንኮራፋት ያመጣል።",
-      vi: "Ngưng thở khi ngủ làm hơi thở bị gián đoạn lặp đi lặp lại trong khi ngủ, gây ngáy to và mệt mỏi vào ban ngày."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Sleep Position:</strong> Try sleeping on your side instead of flat on your back.",
-        "<strong>Evening Routine:</strong> Avoid alcohol and heavy meals shortly before bedtime."
-      ],
-      es: [
-        "<strong>Posición al dormir:</strong> Intente dormir de lado en lugar de boca arriba.",
-        "<strong>Rutina nocturna:</strong> Evite el alcohol y cenas pesadas antes de dormir."
-      ],
-      zh: [
-        "<strong>睡姿调整：</strong> 尝试侧卧睡觉，而不是平躺。",
-        "<strong>晚间习惯：</strong> 睡前避免饮酒和吃大餐。"
-      ],
-      am: [
-        "<strong>የአተኛኘት ሁኔታ፦</strong> በጀርባ ከመተኛት ይልቅ በጎን ለመተኛት ይሞክሩ።",
-        "<strong>ማታ ማታ፦</strong> ከመተኛትዎ በፊት አልኮል እና ከባድ ምግብ ከመመገብ ይቆጠቡ።"
-      ],
-      vi: [
-        "<strong>Tư thế ngủ:</strong> Thử nằm nghiêng thay vì nằm ngửa.",
-        "<strong>Thói quen buổi tối:</strong> Tránh uống rượu và ăn quá no trước khi ngủ."
-      ]
-    }
-  },
-  {
-    id: 'thyroid',
-    keywords: ['hypothyroidism', 'thyroid', 'tiroides', '甲状腺功能减退', 'ታይሮይድ', 'suy giáp'],
-    category: { en: 'Hormones', es: 'Hormonas', zh: '内分泌与激素', am: 'ሆርሞን', vi: 'Nội Tiết' },
-    title: { en: 'Underactive Thyroid (Hypothyroidism)', es: 'Hipotiroidismo', zh: '甲状腺功能减退 (Hypothyroidism)', am: 'የታይሮይድ እጥረት', vi: 'Suy Giáp' },
-    whatIsIt: {
-      en: "Hypothyroidism means the thyroid gland doesn't produce enough hormones. This slows down body processes, causing fatigue and feeling unusually cold.",
-      es: "El hipotiroidismo ocurre cuando la tiroides no produce suficientes hormonas, ralentizando el cuerpo y causando fatiga.",
-      zh: "甲减是指甲状腺无法产生足够的激素。这会减慢身体的新陈代谢，导致疲劳和异常怕冷。",
-      am: "የታይሮይድ እጥረት የሚከሰተው የታይሮይድ ዕጢ በቂ ሆርሞን ሳያመነጭ ሲቀር ነው። ይህም ድካም ያመጣል።",
-      vi: "Suy giáp xảy ra khi tuyến giáp không sản xuất đủ hormone, làm chậm các hoạt động của cơ thể và gây mệt mỏi."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Balanced Nutrition:</strong> Eat nutrient-rich foods including vegetables and clean protein.",
-        "<strong>Pacing Energy:</strong> Balance physical exercise with sufficient daily resting periods."
-      ],
-      es: [
-        "<strong>Nutrición equilibrada:</strong> Consuma alimentos ricos en nutrientes y verduras.",
-        "<strong>Cuidado de energía:</strong> Equilibre el ejercicio físico con suficiente descanso."
-      ],
-      zh: [
-        "<strong>均衡营养：</strong> 食用富含营养的食物，包括蔬菜和优质蛋白质。",
-        "<strong>合理作息：</strong> 在体育锻炼与充足的休息之间保持平衡。"
-      ],
-      am: [
-        "<strong>የተመጣጠነ ምግብ፦</strong> በቪታሚን የበለፀጉ ምግቦችን እና አትክልቶችን ይመገቡ።",
-        "<strong>እረፍት ማድረግ፦</strong> እንቅስቃሴን ከበቂ እረፍት ጋር ያመጣጥኑ።"
-      ],
-      vi: [
-        "<strong>Dinh dưỡng cân bằng:</strong> Ăn thực phẩm giàu dinh dưỡng và rau xanh.",
-        "<strong>Phân bổ năng lượng:</strong> Cân bằng giữa tập luyện và nghỉ ngơi đầy đủ."
-      ]
-    }
-  },
-  {
-    id: 'pneumonia',
-    keywords: ['pneumonia', 'lung infection', 'neumonia', '肺炎', 'የሳንባ ምች', 'viêm phổi'],
-    category: { en: 'Respiratory', es: 'Respiratorio', zh: '呼吸系统', am: 'የመተንፈሻ አካላት', vi: 'Hô Hấp' },
-    title: { en: 'Pneumonia', es: 'Neumonía', zh: '肺炎 (Pneumonia)', am: 'የሳንባ ምች', vi: 'Viêm Phổi' },
-    whatIsIt: {
-      en: "Pneumonia is an infection that causes air sacs in one or both lungs to swell. It leads to coughing, fever, and breathing trouble.",
-      es: "La neumonía es una infección que inflama los sacos de aire de los pulmones, provocando tos, fiebre y dificultad para respirar.",
-      zh: "肺炎是一种会导致单侧或双侧肺部气囊肿胀的感染。它会导致咳嗽、发烧和呼吸困难。",
-      am: "የሳንባ ምች በሳንባ ውስጥ ያሉ አየር ከረጢቶች እንዲያብጡ የሚያደርግ ኢንፌክሽን ነው። ሳል፣ ትኩሳት እና የመተንፈስ ችግር ያመጣል።",
-      vi: "Viêm phổi là nhiễm trùng làm phế nang ở một hoặc hai bên phổi bị sưng, dẫn đến ho, sốt và khó thở."
-    },
-    lifestyle: {
-      en: [
-        "<strong>Ample Rest:</strong> Allow your body significant time to rest and recover.",
-        "<strong>Hydration Support:</strong> Drink warm water and fluids to help clear lung congestion."
-      ],
-      es: [
-        "<strong>Descanso abundante:</strong> Permita que su cuerpo tenga tiempo para recuperarse.",
-        "<strong>Hidratación constante:</strong> Tome agua tibia y líquidos para aliviar la congestión."
-      ],
-      zh: [
-        "<strong>充分休息：</strong> 给身体足够的时间休息和恢复。",
-        "<strong>多喝温水：</strong> 喝温水和液体有助于缓解肺部充血。"
-      ],
-      am: [
-        "<strong>በቂ እረፍት፦</strong> ሰውነትዎ እንዲያገግም በቂ እረፍት ይስጡ።",
-        "<strong>ሞቅ ያለ ውሃ መጠጣት፦</strong> ሞቅ ያለ ውሃ እና ፈሳሾችን ይጠጡ።"
-      ],
-      vi: [
-        "<strong>Nghỉ ngơi nhiều:</strong> Cho cơ thể thời gian nghỉ ngơi để hồi phục.",
-        "<strong>Bổ sung nước:</strong> Uống nước ấm để giúp làm loãng đờm."
+        "<strong>Hạn chế nước ngọt:</strong> Uống nước lọc thay vì đồ uống có đường.",
+        "<strong>Vận động sau khi ăn:</strong> Đi bộ nhẹ sau bữa ăn giúp giảm đường trong máu."
       ]
     }
   },
   {
     id: 'gout',
-    keywords: ['gout', 'uric acid', 'gota', '痛风', 'ጋውት (የመገጣጠሚያ ህመም)', 'bệnh gút'],
-    category: { en: 'Bones & Joints', es: 'Huesos y Articulaciones', zh: '骨骼与关节', am: 'አጥንት እና መገጣጠሚያ', vi: 'Xương & Khớp' },
-    title: { en: 'Gout', es: 'Gota', zh: '痛风 (Gout)', am: 'ጋውት (Gout)', vi: 'Bệnh Gút' },
+    keywords: ['gout', 'uric acid', 'gota', '痛风', 'ጋውት', 'bệnh gút'],
+    category: { en: 'Joint Pain', es: 'Dolor de Articulaciones', zh: '关节疼痛', am: 'የመገጣጠሚያ ህመም', vi: 'Đau Khớp' },
+    title: { en: 'Gout', es: 'Gota', zh: '痛风', am: 'ጋውት', vi: 'Bệnh Gút' },
     whatIsIt: {
-      en: "Gout is a type of joint pain caused by uric acid buildup. It causes sudden, sharp pain, often in the big toe or ankle.",
-      es: "La gota es un dolor articular causado por acumulación de ácido úrico. Provoca dolor agudo repentino en el dedo del pie o tobillo.",
-      zh: "痛风是由尿酸堆积引起的一种关节炎。它会导致突然的剧烈疼痛，通常发生在大脚趾或脚踝处。",
-      am: "ጋውት በዩሪክ አሲድ መከማቸት የሚከሰት የመገጣጠሚያ ህመም ነው። በእግር እጣቢ ወይም ቁርጭምጭሚት ላይ ህመም ያመጣል።",
-      vi: "Gút là một dạng viêm khớp do tích tụ axit uric, gây đau đột ngột và dữ dội, thường ở ngón chân cái."
+      en: "Gout is a sudden, intense joint pain that usually strikes your big toe, ankle, or knee. It happens when tiny, needle-sharp salt crystals build up inside a joint, making it red, hot, and extremely painful to touch.",
+      es: "La gota es un dolor repentino y muy fuerte en las articulaciones, casi siempre en el dedo gordo del pie. Pasa cuando se forman diminutos cristales filosos por dentro, dejando la zona roja y muy sensible.",
+      zh: "痛风是一种突如其来的剧烈关节痛，通常发生在脚大拇指或脚踝。这是因为关节里堆积了像小针一样的结晶，让关节变红、发烫、碰一下就剧痛。",
+      am: "ጋውት በእግር እጣቢ ወይም ቁርጭምጭሚት ላይ በድንገት የሚመጣ ከፍተኛ ህመም ነው። በመገጣጠሚያ ውስጥ ትንንሽ ስለታም ነገሮች ስለሚከማቹ ቦታው እንዲቀላ እና እንዲቃጠል ያደርጋል።",
+      vi: "Gút là cơn đau khớp đột ngột, dữ dội, thường ở ngón chân cái. Nó xảy ra khi các tinh thể sắc nhọn tích tụ trong khớp, khiến khớp đỏ, nóng và cực kỳ đau khi chạm vào."
     },
     lifestyle: {
       en: [
-        "<strong>Hydrate Daily:</strong> Drink plenty of water to help flush out excess uric acid.",
-        "<strong>Diet Adjustments:</strong> Limit red meats, seafood, and alcoholic beverages."
+        "<strong>Drink Plenty of Water:</strong> Water washes out the sharp crystals before they settle in your joints.",
+        "<strong>Limit Red Meat & Alcohol:</strong> Steak, organ meats, and beer trigger these painful attacks."
       ],
       es: [
-        "<strong>Hidrátese a diario:</strong> Tome abundante agua para eliminar el ácido úrico.",
-        "<strong>Ajustes de dieta:</strong> Limite las carnes rojas, mariscos y el alcohol."
+        "<strong>Tome mucha agua:</strong> El agua ayuda a expulsar los cristales antes de que causen dolor.",
+        "<strong>Menos carne roja y cerveza:</strong> La carne y el alcohol provocan estos ataques de dolor."
       ],
       zh: [
-        "<strong>每天补水：</strong> 大量喝水有助于排出多余的尿酸。",
-        "<strong>饮食调整：</strong> 限制红肉、海鲜和酒精饮料。"
+        "<strong>大量喝水：</strong> 多喝水能把这些微小的结晶冲走，防止它们堆积。",
+        "<strong>少吃红肉与饮酒：</strong> 牛肉、内脏和啤酒很容易诱发这种剧烈疼痛。"
       ],
       am: [
-        "<strong>ውሃ መጠጣት፦</strong> ዩሪክ አሲድን ለማስወገድ ብዙ ውሃ ይጠጡ።",
-        "<strong>የምግብ ለውጥ፦</strong> የቀይ ስጋ፣ የባህር ምግቦች እና አልኮል መቀነስ።"
+        "<strong>ብዙ ውሃ መጠጣት፦</strong> ውሃ ህመም የሚያመጡትን ነገሮች ከሰውነት ያጥባል።",
+        "<strong>ስጋ እና አልኮል መቀነስ፦</strong> ቀይ ስጋ እና ቢራ ህመሙን ያባብሱታል።"
       ],
       vi: [
-        "<strong>Uống đủ nước:</strong> Uống nhiều nước giúp đào thải axit uric dư thừa.",
-        "<strong>Điều chỉnh chế độ ăn:</strong> Hạn chế thịt đỏ, hải sản và đồ uống có cồn."
+        "<strong>Uống nhiều nước:</strong> Nước giúp cuốn trôi các tinh thể trước khi chúng đọng lại ở khớp.",
+        "<strong>Hạn chế thịt đỏ & rượu bia:</strong> Thịt bò, nội tạng và bia rất dễ gây ra cơn đau này."
       ]
     }
   },
   {
     id: 'kidney_stones',
     keywords: ['kidney stones', 'calculos renales', 'renales', '肾结石', 'የኩላሊት ድንጋይ', 'sỏi thận'],
-    category: { en: 'Kidney & Urinary', es: 'Sistema Urinario', zh: '泌尿系统', am: 'የሽንት አካላት', vi: 'Hệ Tiết Niệu' },
-    title: { en: 'Kidney Stones', es: 'Cálculos Renales', zh: '肾结石 (Kidney Stones)', am: 'የኩላሊት ድንጋይ', vi: 'Sỏi Thận' },
+    category: { en: 'Kidney & Urinary', es: 'Riñones y Orina', zh: '肾脏与排尿', am: 'ኩላሊት', vi: 'Thận & Tiết Niệu' },
+    title: { en: 'Kidney Stones', es: 'Cálculos Renales (Piedras)', zh: '肾结石', am: 'የኩላሊት ድንጋይ', vi: 'Sỏi Thận' },
     whatIsIt: {
-      en: "Kidney stones are hard mineral deposits that form inside the kidneys. Passing them can cause sharp pain in the back or side.",
-      es: "Los cálculos renales son depósitos minerales que se forman en los riñones. Eliminarlos provoca dolor en la espalda o el costado.",
-      zh: "肾结石是形成于肾脏内部的坚硬矿物质沉淀物。结石移动或排出时可能引起背部或侧腹剧痛。",
-      am: "የኩላሊት ድንጋይ በኩላሊት ውስጥ የሚፈጠር የካ mineral ን ድንጋይ ነው። ድንጋዩ ሲንቀሳቀስ በጀርባ ወይም በጎን በኩል ህመም ያመጣል።",
-      vi: "Sỏi thận là các khoáng chất tích tụ thành khối cứng bên trong thận. Sỏi di chuyển có thể gây đau nhói ở lưng hoặc hông."
+      en: "Kidney stones are small, hard pebble-like clumps that form inside your kidneys when you don't drink enough water. When they move through your body, they can cause sharp pain in your back or lower belly.",
+      es: "Son pequeñas piedritas duras que se forman dentro de los riñones por no tomar suficiente agua. Al moverse, causan un dolor muy agudo en la espalda o el abdomen.",
+      zh: "肾结石是没喝够水时在肾脏里形成的小硬块。当它们在体内移动时，会在后背或下腹部引起剧痛。",
+      am: "የኩላሊት ድንጋይ በቂ ውሃ ባለመጠጣት በኩላሊት ውስጥ የሚፈጠሩ ትንንሽ ድንጋዮች ናቸው። በሚንቀሳቀሱበት ጊዜ በጀርባ ላይ ከፍተኛ ህመም ያመጣሉ።",
+      vi: "Sỏi thận là những viên sỏi nhỏ, cứng hình thành trong thận khi bạn uống không đủ nước. Khi di chuyển, chúng gây đau nhói ở lưng hoặc bụng dưới."
     },
     lifestyle: {
       en: [
-        "<strong>High Fluid Intake:</strong> Drink water regularly to reduce mineral concentration in urine.",
-        "<strong>Sodium Reduction:</strong> Cut down on high-salt prepared foods."
+        "<strong>Guzzle Water:</strong> Drink throughout the day so your pee stays pale or clear.",
+        "<strong>Go Easy on Salt:</strong> High salt foods make your body dump stone-forming stuff into your urine."
       ],
       es: [
-        "<strong>Consumo de líquidos:</strong> Tome agua para reducir la concentración de minerales.",
-        "<strong>Menos sodio:</strong> Reduzca la sal y alimentos procesados."
+        "<strong>Tome agua constantemente:</strong> Su orina debe verse transparente o clara.",
+        "<strong>Baje el consumo de sal:</strong> La sal favorece la formación de estas piedritas."
       ],
       zh: [
-        "<strong>大量喝水：</strong> 定期喝水以降低尿液中的矿物质浓度。",
-        "<strong>减少高钠：</strong> 减少高盐预制食品的摄入。"
+        "<strong>多补充水分：</strong> 让尿液保持清澈或淡黄色，这是水分充足的信号。",
+        "<strong>少吃咸食：</strong> 盐分太高的食物更容易生成石头。"
       ],
       am: [
-        "<strong>ብዙ ውሃ መጠጣት፦</strong> በሽንት ውስጥ የካ ማዕድን መጠን ለማነስ ውሃ ይጠጡ።",
-        "<strong>ጨው መቀነስ፦</strong> የታሸጉ ጨዋማ ምግቦችን ይቀንሱ።"
+        "<strong>ውሃ ማበዛት፦</strong> ሽንትዎ መልክ የሌለው እስኪሆን ድረስ በቂ ውሃ ይጠጡ።",
+        "<strong>ጨው መቀነስ፦</strong> ጨዋማ ምግቦች ለድንጋይ መፈጠር ምክንያት ይሆናሉ።"
       ],
       vi: [
-        "<strong>Uống nhiều nước:</strong> Uống nước đều đặn để làm loãng khoáng chất trong nước tiểu.",
-        "<strong>Giảm muối:</strong> Hạn chế ăn thức ăn chế biến sẵn chứa nhiều muối."
+        "<strong>Uống nước liên tục:</strong> Giữ cho nước tiểu luôn có màu nhạt hoặc trong.",
+        "<strong>Ăn nhạt đi:</strong> Thức ăn mặn làm tăng nguy cơ hình thành sỏi."
+      ]
+    }
+  },
+  {
+    id: 'thyroid',
+    keywords: ['hypothyroidism', 'thyroid', 'tiroides', '甲状腺功能减退', 'ታይሮይድ', 'suy giáp'],
+    category: { en: 'Energy & Fatigue', es: 'Energía y Cansancio', zh: '精力与疲劳', am: 'ጉልበት', vi: 'Năng Lượng & Mệt Mỏi' },
+    title: { en: 'Underactive Thyroid', es: 'Tiroides Lenta (Hipotiroidismo)', zh: '甲状腺偏低 (甲减)', am: 'የታይሮይድ እጥረት', vi: 'Suy Giáp' },
+    whatIsIt: {
+      en: "Think of your thyroid like your body's internal battery charger. When it runs on 'low battery,' your whole body slows down—making you feel constantly exhausted, cold, and slow.",
+      es: "Su tiroides es como la batería de su cuerpo. Si funciona en 'batería baja', todo su cuerpo se alenta, haciéndolo sentir cansado, con frío y sin energía.",
+      zh: "把甲状腺想象成身体的电池。当它“电量低”时，整个身体的运转都会变慢——让您总是觉得特别累、怕冷、提不起精神。",
+      am: "ታይሮይድዎን እንደ ሰውነትዎ ባትሪ ያስቡት። ባትሪው ሲያልቅ ሰውነትዎ ይደክማል፡ ሁልጊዜ ቅዝቃዜ እና ድካም ይሰማዎታል።",
+      vi: "Hãy tưởng tượng tuyến giáp như cục pin của cơ thể. Khi 'yếu pin', toàn bộ cơ thể sẽ chạy chậm lại—khiến bạn luôn cảm thấy mệt mỏi, bị lạnh và uể ả."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Pace Yourself:</strong> Take breaks during the day so you don't drain all your energy at once.",
+        "<strong>Keep Doctor Appointments:</strong> Simple daily medication helps recharge this internal battery."
+      ],
+      es: [
+        "<strong>Tómelo con calma:</strong> Descanse a lo largo del día para no agotarse por completo.",
+        "<strong>Consulte a su médico:</strong> Una pastilla diaria ayuda a recargar su energía."
+      ],
+      zh: [
+        "<strong>注意休息：</strong> 白天多留出休息时间，不要一次性把精力耗尽。",
+        "<strong>按时看医生：</strong> 每天按时吃药能帮身体重新“充满电”。"
+      ],
+      am: [
+        "<strong>እረፍት ማድረግ፦</strong> ጉልበትዎ እንዳያልቅ በቀኑ ውስጥ እረፍት ያድርጉ።",
+        "<strong>ሐኪም ማየት፦</strong> በየቀኑ መድኃኒት መውሰድ ባትሪውን ለመሙላት ይረዳል።"
+      ],
+      vi: [
+        "<strong>Phân bổ sức lực:</strong> Nghỉ ngơi hợp lý trong ngày để không bị kiệt sức.",
+        "<strong>Uống thuốc đều đặn:</strong> Thuốc hàng ngày giúp 'sạc' lại năng lượng cho cơ thể."
+      ]
+    }
+  },
+  {
+    id: 'asthma',
+    keywords: ['asthma', 'breathing trouble', 'asma', '哮喘', 'አስም', 'hen suyễn'],
+    category: { en: 'Lungs & Breathing', es: 'Pulmones y Respiración', zh: '肺部与呼吸', am: 'ሳንባ', vi: 'Phổi & Hô Hấp' },
+    title: { en: 'Asthma', es: 'Asma', zh: '哮喘', am: 'አስም', vi: 'Bệnh Hen Suyễn' },
+    whatIsIt: {
+      en: "Asthma makes the breathing tubes in your lungs get tight and swollen. During an flare-up, it feels like trying to breathe through a skinny coffee straw.",
+      es: "El asma hace que los tubos por donde respira se aprieten e hinchen. Se siente como tratar de tomar aire a través de un popote muy delgado.",
+      zh: "哮喘会让肺部里的气管变紧、变肿。发作时，感觉就像在尝试用一根细小的咖啡吸管来呼吸。",
+      am: "አስም የመተንፈሻ ቱቦዎችዎ እንዲጠቡ ያደርጋል። ህመሙ ሲነሳ በጠባብ ቱቦ ለመተንፈስ እንደመሞከር ያህል ይከብዳል።",
+      vi: "Hen suyễn làm các ống thở trong phổi bị thắt chặt và sưng lên. Khi lên cơn hen, bạn cảm thấy như đang cố thở qua một chiếc ống hút nhỏ."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Avoid Dust & Smoke:</strong> Stay away from cigarette smoke, heavy dust, and strong chemicals.",
+        "<strong>Keep Inhaler Nearby:</strong> Always know where your rescue inhaler is located."
+      ],
+      es: [
+        "<strong>Evite humo y polvo:</strong> Aléjese del humo de cigarro, polvo y olores fuertes.",
+        "<strong>Inhalador a la mano:</strong> Tenga siempre cerca su inhalador de emergencia."
+      ],
+      zh: [
+        "<strong>远离灰尘烟雾：</strong> 远离二手烟、重灰尘和刺鼻的化学气味。",
+        "<strong>随身带吸入剂：</strong> 确保随时能拿到您的急救喷雾。"
+      ],
+      am: [
+        "<strong>ከጢስ መራቅ፦</strong> ከሲጋራ ጢስ እና ከአቧራ እራስዎን ይጠብቁ።",
+        "<strong>መድኃኒት መያዝ፦</strong> የመተንፈሻ መድኃኒትዎን ሁልጊዜ ቅርብ ያድርጉ።"
+      ],
+      vi: [
+        "<strong>Tránh bụi & khói:</strong> Tránh xa khói thuốc, bụi bẩn và mùi hóa chất nồng.",
+        "<strong>MANG THEO BÌNH XỊT:</strong> Luôn biết bình xịt cấp cứu của bạn ở đâu."
+      ]
+    }
+  },
+  {
+    id: 'anemia',
+    keywords: ['anemia', 'iron', 'hierro', '贫血', 'አኔሚያ', 'thiếu máu'],
+    category: { en: 'Heart & Blood', es: 'Corazón y Sangre', zh: '心脏与血液', am: 'ደም', vi: 'Tim & Máu' },
+    title: { en: 'Anemia (Low Iron)', es: 'Anemia (Hierro Bajo)', zh: '贫血', am: 'አኔሚያ (የደም ማነስ)', vi: 'Thiếu Máu' },
+    whatIsIt: {
+      en: "Red blood cells carry oxygen around like delivery trucks. Anemia means you don't have enough of these trucks, making your body feel weak, dizzy, and short of breath.",
+      es: "Los glóbulos rojos llevan oxígeno como camiones de entrega. La anemia significa que no tiene suficientes camiones, sintiéndose débil y mareado.",
+      zh: "红细胞就像在体内运送氧气的卡车。贫血意味着卡车数量不够，导致身体感到虚弱、头晕、喘不上气。",
+      am: "የደም ሕዋሳት ኦክስጅንን እንደሚያጓጉዙ መኪናዎች ናቸው። አኔሚያ ማለት በቂ መኪናዎች ስለሌሉዎት አካልዎ ይደክማል እና ያዞርዎታል።",
+      vi: "Tế bào máu giống như những chiếc xe giao hàng chở oxy đi khắp cơ thể. Thiếu máu là khi không có đủ xe, khiến bạn thấy yếu, chóng mặt và mệt."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Eat Iron Foods:</strong> Spinach, beans, lentils, and red meat help build new blood cells.",
+        "<strong>Pair with Vitamin C:</strong> Eating oranges or tomatoes helps your tummy absorb iron better."
+      ],
+      es: [
+        "<strong>Coma alimentos con hierro:</strong> La espinaca, frijoles y carne ayudan a crear sangre.",
+        "<strong>Sume Vitamina C:</strong> Las naranjas o jitomates ayudan a absorber mejor el hierro."
+      ],
+      zh: [
+        "<strong>多吃含铁食物：</strong> 菠菜、豆类和红肉有助于制造新的血液。",
+        "<strong>搭配维C：</strong> 吃橙子或番茄能让肠胃更好地吸收铁质。"
+      ],
+      am: [
+        "<strong>በብረት የበለፀጉ ምግቦች፦</strong> ቆስጣ፣ ምስር እና ስጋ ደም ለመተካት ይረዳሉ።",
+        "<strong>ቪታሚን ሲ መጠቀም፦</strong> ብርቱካን መመገብ ሰውነት ብረቱን በቀላሉ እንዲወስድ ይረዳል።"
+      ],
+      vi: [
+        "<strong>Ăn thực phẩm giàu sắt:</strong> Rau rau chân vịt, đậu và thịt giúp tạo máu mới.",
+        "<strong>Kết hợp Vitamin C:</strong> Ăn cam hoặc cà chua giúp dạ dày hấp thu sắt tốt hơn."
+      ]
+    }
+  },
+  {
+    id: 'gerd',
+    keywords: ['gerd', 'acid reflux', 'heartburn', 'reflujo', '胃食管反流', 'የሆድ ቃጠሎ', 'trào ngược axit'],
+    category: { en: 'Stomach & Digestion', es: 'Estómago y Digestión', zh: '肠胃与消化', am: 'ሆድ', vi: 'Dạ Dày & Tiêu Hóa' },
+    title: { en: 'Acid Reflux (Heartburn)', es: 'Reflujo Ácido (Ardor de Estómago)', zh: '胃酸反流 (反酸)', am: 'የሆድ ቃጠሎ', vi: 'Trào Ngược Axit' },
+    whatIsIt: {
+      en: "The valve at the top of your stomach is supposed to stay closed. Acid reflux happens when strong stomach juices leak back up into your throat, creating a burning hot feeling in your chest.",
+      es: "La tapa del estómago debe quedarse cerrada. El reflujo pasa cuando el jugo del estómago se regresa a la garganta, causando un ardor caliente en el pecho.",
+      zh: "胃顶部的“门”本该是关紧的。胃酸反流就是胃里的酸水往上漏到了食道里，导致胸口产生火辣辣的灼烧感。",
+      am: "የሆድዎ በር ተዘጋጅቶ መቆየት አለበት። የሆድ ቃጠሎ የሚከሰተው የሆድ አሲድ ወደ ጉሮሮዎ ተመልሶ ሲፈስ እና ሲያቃጥልዎት ነው።",
+      vi: "Nắp dạ dày đáng lẽ phải đóng kín. Trào ngược xảy ra khi dịch axit từ dạ dày bị rò rỉ ngược lên họng, gây cảm giác nóng rát ở ngực."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Don't Lie Down After Eating:</strong> Stay upright for 2 to 3 hours after meals so gravity holds down the acid.",
+        "<strong>Eat Smaller Meals:</strong> Stuffing your stomach forces the valve open."
+      ],
+      es: [
+        "<strong>No se acueste rápido:</strong> Espere 2 o 3 horas después de comer antes de acostarse.",
+        "<strong>Coma platos pequeños:</strong> Llenarse demasiado empuja el ácido hacia arriba."
+      ],
+      zh: [
+        "<strong>饭后不要立刻躺下：</strong> 饭后保持坐立2到3小时，利用重力把胃酸压在下面。",
+        "<strong>少食多餐：</strong> 吃得太饱会把胃顶部的“门”强行顶开。"
+      ],
+      am: [
+        "<strong>ከተመገቡ በኋላ አለመተኛት፦</strong> ከተመገቡ በኋላ ለ2-3 ሰዓታት ሳይተኙ ይቆዩ።",
+        "<strong>ትንሽ መመገብ፦</strong> ሆድን በጣም መሙላት አሲዱ ወደ ላይ እንዲወጣ ያደርገዋል።"
+      ],
+      vi: [
+        "<strong>Không nằm ngay sau khi ăn:</strong> Giữ tư thế ngồi/đứng 2-3 tiếng sau ăn để trọng lực giữ axit ở lại.",
+        "<strong>Chia nhỏ bữa ăn:</strong> Ăn quá no sẽ đẩy nắp dạ dày mở ra."
+      ]
+    }
+  },
+  {
+    id: 'migraine',
+    keywords: ['migraine', 'headache', 'dolor de cabeza', 'migraña', '偏头痛', 'የራስ ምታት', 'đau nửa đầu'],
+    category: { en: 'Brain & Nervous System', es: 'Cerebro y Nervios', zh: '大脑与神经', am: 'ጭንቅላት', vi: 'Bộ Não & Thần Kinh' },
+    title: { en: 'Migraine', es: 'Migraña', zh: '偏头痛', am: 'የራስ ምታት (Migraine)', vi: 'Đau Nửa Đầu' },
+    whatIsIt: {
+      en: "A migraine isn't just a regular headache—it's a severe, pounding throbbing usually on one side of your head that makes bright light, noise, and smells feel painful.",
+      es: "No es un dolor de cabeza común; es un latido intenso en un lado de la cabeza que hace que la luz y el ruido sean insoportables.",
+      zh: "偏头痛不只是普通头痛——它是头部一侧剧烈的、像敲鼓一样的跳痛，会让你觉得刺眼的光和噪音都难以忍受。",
+      am: "ይህ ተራ የራስ ምታት አይደለም፤ በጭንቅላትዎ በአንድ በኩል የሚመታ ከፍተኛ ህመም ሲሆን ለብርሃን እና ድምፅ ተጎጂ ያደርጋል።",
+      vi: "Đau nửa đầu không phải đau đầu thường—nó là cơn đau nhói dữ dội ở một bên đầu, khiến bạn sợ ánh sáng và tiếng ồn."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Rest in a Dark, Quiet Room:</strong> Turn off lights and screens as soon as pounding starts.",
+        "<strong>Drink Water Early:</strong> Dehydration is one of the biggest migraine triggers."
+      ],
+      es: [
+        "<strong>Descanse en lo oscuro:</strong> Apague luces y pantallas en cuanto empiece el dolor.",
+        "<strong>Tome agua pronto:</strong> La falta de agua es la causa principal de migrañas."
+      ],
+      zh: [
+        "<strong>在黑暗安静处休息：</strong> 感觉头痛开始时，立刻关掉灯光和手机屏幕。",
+        "<strong>及时补充水分：</strong> 脱水是引发偏头痛的最常见原因之一。"
+      ],
+      am: [
+        "<strong>ጨለማ ክፍል ማረፍ፦</strong> ህመሙ ሲጀምር መብራት እና ስልክ ያጥፉ።",
+        "<strong>ውሃ መጠጣት፦</strong> የውሃ እጥረት ለራስ ምታት ዋነኛ ምክንያት ነው።"
+      ],
+      vi: [
+        "<strong>Nghỉ ngơi trong phòng tối:</strong> Tắt đèn và màn hình ngay khi cơn đau bắt đầu.",
+        "<strong>Uống nước sớm:</strong> Thiếu nước là nguyên nhân hàng đầu gây đau nửa đầu."
+      ]
+    }
+  },
+  {
+    id: 'uti',
+    keywords: ['uti', 'urinary tract infection', 'infeccion urinaria', '尿路感染', 'የሽንት குழாய் ኢንፌክሽን', 'viêm đường tiết niệu'],
+    category: { en: 'Kidney & Urinary', es: 'Riñones y Orina', zh: '肾脏与排尿', am: 'ሽንት', vi: 'Thận & Tiết Niệu' },
+    title: { en: 'Urinary Infection (UTI)', es: 'Infección Urinaria', zh: '尿路感染', am: 'የሽንት ቧንቧ ኢንፌክሽን', vi: 'Viêm Đường Tiết Niệu' },
+    whatIsIt: {
+      en: "A UTI happens when unwanted bacteria sneak into your pee tube. It makes you feel like you have to pee every two minutes, and it stings or burns when you go.",
+      es: "Ocurre cuando entran bacterias a las vías urinarias. Da la sensación de querer ir al baño a cada rato y causa un ardor molesto al orinar.",
+      zh: "当不该出现的细菌溜进尿道时就会发生尿路感染。它会让你每两分钟就想上一次厕所，而且上厕所时会有刺痛或发热感。",
+      am: "የሽንት ቧንቧ ኢንፌክሽን የሚከሰተው ባክቴሪያ ወደ ሽንት ቱቦ ሲገባ ነው። በየደቂቃው እንዲሸኑ ያደርጋል እና በሚሸኑበት ጊዜ ያቃጥላል።",
+      vi: "Viêm đường tiết niệu xảy ra khi vi khuẩn xâm nhập vào đường tiểu. Nó khiến bạn muốn đi tiểu liên tục và thấy buốt rát khi đi."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Flush it Out with Water:</strong> Drinking big glasses of water helps wash the germs right out.",
+        "<strong>Don't Hold Your Pee:</strong> Go to the bathroom as soon as you feel the urge."
+      ],
+      es: [
+        "<strong>Tome mucha agua:</strong> Beber agua ayuda a expulsar los gérmenes más rápido.",
+        "<strong>No se aguante:</strong> Vaya al baño en cuanto sienta ganas de orinar."
+      ],
+      zh: [
+        "<strong>多喝水冲走细菌：</strong> 大口喝水能帮助把细菌从体内冲刷出去。",
+        "<strong>千万不要憋尿：</strong> 一有尿意就立刻去上厕所。"
+      ],
+      am: [
+        "<strong>በውሃ ማጽዳት፦</strong> ብዙ ውሃ መጠጣት ጀርሞች እንዲወጡ ይረዳል።",
+        "<strong>ሽንት አለመያዝ፦</strong> ሽንት ሲመጣዎት ወዲያውኑ ይሸኑ።"
+      ],
+      vi: [
+        "<strong>Uống nước để dội sạch vi khuẩn:</strong> Uống nhiều nước giúp đẩy vi khuẩn ra ngoài.",
+        "<strong>Không nhịn tiểu:</strong> Đi tiểu ngay khi bạn cảm thấy buồn đi."
+      ]
+    }
+  },
+  {
+    id: 'arthritis',
+    keywords: ['arthritis', 'joint pain', 'osteoarthritis', 'dolor articular', '关节炎', 'የአጥንት መገጣጠሚያ ህመም', 'viêm khớp'],
+    category: { en: 'Joint Pain', es: 'Dolor de Articulaciones', zh: '关节疼痛', am: 'መገጣጠሚያ', vi: 'Đau Khớp' },
+    title: { en: 'Joint Pain (Arthritis)', es: 'Dolor de Articulaciones (Artritis)', zh: '关节炎', am: 'የመገጣጠሚያ ህመም', vi: 'Viêm Khớp' },
+    whatIsIt: {
+      en: "Your joints have smooth natural cushions so bones don't rub together. Arthritis is when those cushions wear down over time, making joints feel stiff, swollen, and creaky.",
+      es: "Las articulaciones tienen cojinetes suaves para que los huesos no rocen. La artritis pasa cuando esos cojinetes se desgastan, dejando las coyunturas tiesas.",
+      zh: "关节里有平滑的天然“垫片”防止骨头相互摩擦。关节炎就是这些垫片磨损了，导致关节僵硬、肿胀、活动起来咯吱响。",
+      am: "መገጣጠሚያዎችዎ አጥንቶች እንዳይፋጩ የሚያደርግ ለስላሳ ነገር አላቸው። አርትራይተስ ማለት ይህ ለስላሳ ነገር ሲያልቅ እና መገጣጠሚያዎች ሲጠናከሩ ነው።",
+      vi: "Các khớp có lớp đệm tự nhiên để xương không cọ vào nhau. Viêm khớp là khi lớp đệm đó bị mòn, làm khớp bị cứng, sưng và đau."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Gentle Water Exercises:</strong> Swimming or water walking keeps joints loose without strain.",
+        "<strong>Warm Compresses:</strong> A warm towel or heating pad calms morning stiffness."
+      ],
+      es: [
+        "<strong>Ejercicios en agua:</strong> Nadar o moverse en la alberca no lastima las coyunturas.",
+        "<strong>Calor suave:</strong> Una compresa caliente alivia la rigidez de las mañanas."
+      ],
+      zh: [
+        "<strong>温和的水中运动：</strong> 游泳或在水中行走能在不加重负担的情况下保持关节灵活。",
+        "<strong>热敷缓解：</strong> 早起时用温毛巾热敷能减轻关节僵硬感。"
+      ],
+      am: [
+        "<strong>የውሃ እንቅስቃሴ፦</strong> ዋና መዋኘት መገጣጠሚያዎችን ሳይጎዳ እንዲላሉ ያደርጋል።",
+        "<strong>ሞቅ ያለ ጨርቅ፦</strong> ጠዋት ጠዋት ሞቅ ያለ ጨርቅ ማድረግ ጥንካሬን ይቀንሳል።"
+      ],
+      vi: [
+        "<strong>Tập thể dục dưới nước:</strong> Bơi lội giúp khớp linh hoạt mà không bị áp lực.",
+        "<strong>Chườm ấm:</strong> Dùng khăn ấm chườm giúp giảm cứng khớp vào buổi sáng."
+      ]
+    }
+  },
+  {
+    id: 'anxiety',
+    keywords: ['anxiety', 'stress', 'ansiedad', 'estres', '焦虑', 'ጭንቀት', 'lo âu'],
+    category: { en: 'Mind & Mood', es: 'Mente y Ánimo', zh: '情绪与心理', am: 'አእምሮ', vi: 'Tâm Lý & Cảm Xúc' },
+    title: { en: 'Anxiety & Worry', es: 'Ansiedad y Estrés', zh: '焦虑与紧张', am: 'ጭንቀት', vi: 'Lo Âụ & Căng Thẳng' },
+    whatIsIt: {
+      en: "Anxiety triggers your body's emergency alarm even when there is no real danger nearby. It makes your heart race, your stomach twist, and your head spin with constant worry.",
+      es: "La ansiedad activa la alarma de emergencia del cuerpo sin haber peligro real. Hace que el corazón lata rápido y la mente no pare de preocuparse.",
+      zh: "即使周围没有危险，焦虑也会拉响身体的“紧急警报”。它会让人心跳加速、胃里翻江倒海，脑子里停不下地瞎想。",
+      am: "ጭንቀት ምንም አደጋ በሌለበት ጊዜ እንኳን የሰውነትዎን የማስጠንቀቂያ ደወል ያበራል። የልብ ምት እንዲፋጠን እና እንዲጨነቁ ያደርጋል።",
+      vi: "Lo âu kích hoạt báo động khẩn cấp của cơ thể ngay cả khi không có nguy hiểm. Nó làm tim đập nhanh và đầu óc lo lắng không ngừng."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Slow Belly Breathing:</strong> Inhale slowly for 4 seconds, hold for 4, then exhale slowly.",
+        "<strong>Cut Back on Coffee:</strong> Too much caffeine acts like gasoline on an anxious mind."
+      ],
+      es: [
+        "<strong>Respire despacio:</strong> Inhale en 4 segundos, sostenga 4 y exhale lento.",
+        "<strong>Menos café:</strong> La cafeína empeora los nervios y los latidos rápidos."
+      ],
+      zh: [
+        "<strong>缓慢深呼吸：</strong> 慢慢吸气4秒，憋气4秒，然后慢慢呼出。",
+        "<strong>少喝咖啡：</strong> 摄入太多咖啡因就像给焦虑的心情“火上浇油”。"
+      ],
+      am: [
+        "<strong>ቀስ ብሎ መተንፈስ፦</strong> ለ4 ሰከንድ አየር ወደ ውስጥ ማስገባት እና ቀስ ብሎ ማውጣት።",
+        "<strong>ቡና መቀነስ፦</strong> ቡና ማበዛት ጭንቀቱን ያባብሰዋል።"
+      ],
+      vi: [
+        "<strong>Hít thở sâu:</strong> Hít vào 4 giây, giữ 4 giây, rồi thở ra thật chậm.",
+        "<strong>Bớt cà phê:</strong> Quá nhiều caffeine sẽ làm tâm trạng lo âu tệ hơn."
+      ]
+    }
+  },
+  {
+    id: 'sleep_apnea',
+    keywords: ['sleep apnea', 'snoring', 'apnea del sueño', 'ronquidos', '睡眠呼吸暂停', 'የእንቅልፍ ችግር', 'ngưng thở khi ngủ'],
+    category: { en: 'Lungs & Breathing', es: 'Pulmones y Respiración', zh: '肺部与呼吸', am: 'እንቅልፍ', vi: 'Phổi & Hô Hấp' },
+    title: { en: 'Sleep Apnea (Snoring)', es: 'Apnea del Sueño (Ronquidos)', zh: '睡眠打鼾 (暂停)', am: 'የእንቅልፍ አፕኒያ', vi: 'Ngưng Thở Khi Ngủ' },
+    whatIsIt: {
+      en: "Sleep apnea happens when your throat muscles relax too much while sleeping, momentarily closing off your airway. It causes loud snoring and leaves you feeling exhausted all day.",
+      es: "Pasa cuando los músculos de la garganta se relajan tanto al dormir que tapan el aire. Causa ronquidos fuertes y mucho cansancio de día.",
+      zh: "睡眠呼吸暂停是在睡觉时，喉咙肌肉过于放松，短暂堵住了气道。这会导致大声打鼾，而且即使睡很久白天气色也很差、非常累。",
+      am: "ይህ የሚከሰተው በእንቅልፍ ወቅት የጉሮሮ ጡንቻዎች በጣም ስለሚላሉ አየር እንዳይገባ ሲከለክሉ ነው። ከፍተኛ ማንኮራፋት እና በቀን ውስጥ ድካም ያመጣል።",
+      vi: "Xảy ra khi cơ họng quá thư giãn lúc ngủ, làm nghẽn đường thở tạm thời. Nó gây ngáy to và khiến bạn kiệt sức vào ban ngày."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Sleep on Your Side:</strong> Sleeping on your back lets your tongue block your throat easily.",
+        "<strong>Avoid Late Drinks:</strong> Alcohol right before bed relaxes throat muscles way too much."
+      ],
+      es: [
+        "<strong>Duerma de lado:</strong> Dormir boca arriba facilita que se tape la garganta.",
+        "<strong>Evite alcohol de noche:</strong> El alcohol relaja demasiado la garganta."
+      ],
+      zh: [
+        "<strong>尝试侧睡：</strong> 平躺着睡觉会让舌头很容易掉落并堵住喉咙。",
+        "<strong>睡前不喝酒：</strong> 睡前喝酒会让喉咙肌肉过分松弛。"
+      ],
+      am: [
+        "<strong>በጎን መተኛት፦</strong> በጀርባ መተኛት ጉሮሮ በቀላሉ እንዲዘጋ ያደርጋል።",
+        "<strong>ማታ አልኮል አለመጠጣት፦</strong> ማታ አልኮል መጠጣት የጉሮሮ ጡንቻዎችን በጣም ያላልያል።"
+      ],
+      vi: [
+        "<strong>Tập nằm nghiêng:</strong> Nằm ngửa khiến lưỡi dễ trôi về sau làm chèn họng.",
+        "<strong>Tránh uống rượu muộn:</strong> Rượu trước khi ngủ làm cơ họng bị nhão quá mức."
+      ]
+    }
+  },
+  {
+    id: 'pneumonia',
+    keywords: ['pneumonia', 'lung infection', 'neumonia', '肺炎', 'የሳንባ ምች', 'viêm phổi'],
+    category: { en: 'Lungs & Breathing', es: 'Pulmones y Respiración', zh: '肺部与呼吸', am: 'ሳንባ', vi: 'Phổi & Hô Hấp' },
+    title: { en: 'Pneumonia (Lung Infection)', es: 'Neumonía (Infección en Pulmones)', zh: '肺炎', am: 'የሳንባ ምች', vi: 'Viêm Phổi' },
+    whatIsIt: {
+      en: "Pneumonia is an infection that fills the tiny air sacks inside your lungs with fluid or gunk. It causes painful coughing, high fevers, and makes it tough to catch your breath.",
+      es: "Es una infección que llena de líquido los sacos de aire de los pulmones. Causa tos con dolor, fiebre alta y dificultad para respirar.",
+      zh: "肺炎是一种让肺里的小气囊填满液体或黏液的感染。它会导致咳嗽时胸痛、发高烧，并且让人喘不过气来。",
+      am: "የሳንባ ምች በሳንባ ውስጥ ያሉ አየር ከረጢቶችን በፈሳሽ የሚሞላ ኢንፌክሽን ነው። ህመም ያለው ሳል፣ ትኩሳት እና የመተንፈስ ችግር ያመጣል።",
+      vi: "Viêm phổi là nhiễm trùng làm các túi khí trong phổi bị đập đầy dịch hoặc đờm. Nó gây ho đau ngực, sốt cao và vô cùng khó thở."
+    },
+    lifestyle: {
+      en: [
+        "<strong>Get Lots of Bed Rest:</strong> Your body needs to conserve every bit of energy to fight off germs.",
+        "<strong>Sip Warm Liquids:</strong> Warm water or broth helps thin out heavy chest gunk."
+      ],
+      es: [
+        "<strong>Mucho reposo en cama:</strong> El cuerpo necesita energía para vencer los gérmenes.",
+        "<strong>Líquidos tibios:</strong> El agua tibia o caldos ayudan a aflojar las flemas."
+      ],
+      zh: [
+        "<strong>多卧床休息：</strong> 身体需要节省每一丝体力来与病菌抗争。",
+        "<strong>喝点温热液体：</strong> 喝温水或热汤有助于化解胸口化不开的黏液。"
+      ],
+      am: [
+        "<strong>በቂ እረፍት ማድረግ፦</strong> ሰውነትዎ በሽታውን ለመዋጋት ጉልበት ያስፈልገዋል።",
+        "<strong>ሞቅ ያለ ፈሳሽ መጠጣት፦</strong> ሞቅ ያለ ውሃ ወይም ሾርባ አክታን ለማስወገድ ይረዳል።"
+      ],
+      vi: [
+        "<strong>Nghỉ ngơi trên giường:</strong> Cơ thể cần dồn toàn bộ năng lượng để chống lại vi khuẩn.",
+        "<strong>Uống nước ấm:</strong> Nước ấm hoặc nước canh giúp làm loãng đờm trong ngực."
       ]
     }
   }
@@ -603,7 +568,7 @@ function runSearch() {
     card.style.display = 'block';
     document.getElementById('res-badge').innerText = 'Notice';
     document.getElementById('res-title').innerText = 'Condition Not Found';
-    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try selecting one of the popular topics above or searching for terms like "Diabetes" or "Asthma".`;
+    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try searching for terms like "Diabetes" or "Asthma".`;
     document.getElementById('res-action-grid').innerHTML = '';
   }
 }
