@@ -1,5 +1,4 @@
-```css
-/* Custom Aesthetic Design Tokens */
+/* Custom Design Tokens */
 :root {
   --bg-gradient: linear-gradient(135deg, #eef7fc 0%, #e2eff7 100%);
   --card-shadow: 0 20px 40px rgba(142, 172, 194, 0.15);
@@ -21,7 +20,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Minimalist Glass Header Navigation */
+/* Header Navigation */
 header {
   display: flex;
   justify-content: space-between;
@@ -66,34 +65,34 @@ select:hover {
   transform: translateY(-1px);
 }
 
-/* Application Layout Structure */
+/* Layout Container */
 .app-container {
   max-width: 680px;
-  margin: 60px auto 80px auto;
+  margin: 50px auto 80px auto;
   padding: 0 24px;
 }
 
 .hero-section {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 h2 {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 800;
   color: var(--dark-navy);
-  margin: 0 0 14px 0;
+  margin: 0 0 12px 0;
   letter-spacing: -0.5px;
 }
 
 .subtitle {
-  font-size: 17px;
+  font-size: 16px;
   color: var(--text-muted);
   margin: 0;
   line-height: 1.5;
 }
 
-/* Premium Floating Search Box */
+/* Search Box Area */
 .search-box {
   display: flex;
   background: var(--pure-white);
@@ -102,7 +101,7 @@ h2 {
   box-shadow: var(--input-shadow);
   border: 1px solid rgba(255, 255, 255, 0.8);
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   transition: all 0.3s ease;
 }
 
@@ -128,7 +127,7 @@ input[type="text"] {
   width: 100%;
   border: none;
   outline: none;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-dark);
   background: transparent;
@@ -138,14 +137,13 @@ input[type="text"]::placeholder {
   color: #cbd5e1;
 }
 
-/* Aesthetic Pill Button */
 button {
   background: var(--primary-blue);
   color: var(--pure-white);
   border: none;
-  padding: 14px 32px;
+  padding: 14px 28px;
   border-radius: 26px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -156,18 +154,48 @@ button:hover {
   transform: scale(1.02);
 }
 
-/* Floating Clean Results Card Layout */
+/* Quick Filter Suggestion Pills */
+.quick-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 35px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tag-btn {
+  background: #e2eff7;
+  color: var(--primary-blue);
+  border: 1px solid rgba(0, 119, 182, 0.2);
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-btn:hover {
+  background: var(--primary-blue);
+  color: var(--pure-white);
+  transform: translateY(-1px);
+}
+
+/* Results Card Layout */
 #results-card {
   background: var(--pure-white);
-  padding: 40px;
+  padding: 36px;
   border-radius: 28px;
   box-shadow: var(--card-shadow);
   border: 1px solid rgba(255, 255, 255, 0.6);
-  animation: cardFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cardFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes cardFadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -177,23 +205,23 @@ button:hover {
   color: #0369a1;
   padding: 6px 14px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 #results-card h1 {
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--dark-navy);
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   letter-spacing: -0.5px;
 }
 
 .info-section {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .info-section:last-child {
@@ -201,35 +229,34 @@ button:hover {
 }
 
 #results-card h3 {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--primary-blue);
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
 }
 
 #results-card p {
-  font-size: 16px;
+  font-size: 15px;
   color: #475569;
-  line-height: 1.7;
+  line-height: 1.6;
   margin: 0;
 }
 
-/* Modern Card Grid Layout for Actions */
 .action-grid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .action-item {
   background: #f8fafc;
   border-left: 4px solid var(--primary-blue);
-  padding: 16px 20px;
-  border-radius: 4px 16px 16px 4px;
-  font-size: 15px;
+  padding: 14px 18px;
+  border-radius: 4px 14px 14px 4px;
+  font-size: 14px;
   color: #475569;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .action-item strong {
@@ -237,15 +264,9 @@ button:hover {
 }
 
 .disclaimer {
-  margin-top: 40px;
-  font-size: 13px;
+  margin-top: 35px;
+  font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.5;
   text-align: center;
 }
-```
-
----
-
-
-
