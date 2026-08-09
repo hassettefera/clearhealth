@@ -271,12 +271,68 @@ button#search-btn:hover {
   margin-bottom: 12px;
 }
 
-#results-card h1 {
+/* Card Header Flex Layout */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.card-header-row h1 {
   font-size: 24px;
   font-weight: 800;
   color: var(--blue-darkest);
-  margin-bottom: 18px;
+  margin-bottom: 0 !important;
   letter-spacing: -0.4px;
+}
+
+/* Styled Text-to-Speech Button */
+.listen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--yellow-soft);
+  color: var(--blue-darkest);
+  border: 1.5px solid var(--yellow-deep);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.listen-btn:hover {
+  background-color: var(--yellow-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 225, 138, 0.4);
+}
+
+.speaker-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--blue-darkest);
+}
+
+/* Speaking Active State */
+.listen-btn.speaking {
+  background-color: var(--blue-brand);
+  color: #ffffff;
+  border-color: var(--blue-darkest);
+}
+
+.listen-btn.speaking .speaker-icon {
+  color: #ffffff;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 .info-section {
