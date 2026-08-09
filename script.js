@@ -45,7 +45,7 @@ const uiTranslations = {
   }
 };
 
-// Medical Database (Max 3 lines explanation + general lifestyle tips only)
+// Medical Database (15 Conditions)
 const medicalDatabase = [
   {
     id: 'blood_pressure',
@@ -590,6 +590,7 @@ function initSearchEngine() {
 
 function runSearch() {
   const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const card = document.getElementById('results-card');
   if (!query) return;
 
   if (!fuseInstance) initSearchEngine();
@@ -599,7 +600,11 @@ function runSearch() {
     activeConditionId = results[0].item.id;
     renderCard();
   } else {
-    alert("Condition not found. Try searching for 'Blood Pressure', 'Diabetes', or 'Asthma'.");
+    card.style.display = 'block';
+    document.getElementById('res-badge').innerText = 'Notice';
+    document.getElementById('res-title').innerText = 'Condition Not Found';
+    document.getElementById('res-what-text').innerText = `We couldn't find anything for "${query}". Try selecting one of the popular topics above or searching for terms like "Diabetes" or "Asthma".`;
+    document.getElementById('res-action-grid').innerHTML = '';
   }
 }
 
