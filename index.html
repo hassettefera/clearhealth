@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClearHealth - Simplified Medical Search</title>
+  <title>ClearHealth - Simplified Medical Literacy</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://jsdelivr.net"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 </head>
 <body>
 
-  <!-- Navigation Bar -->
   <header>
     <div class="logo">Clear<span>Health</span></div>
     <div class="lang-selector">
+      <label for="lang-select">Language:</label>
       <select id="lang-select" onchange="changeLanguage()">
         <option value="en">🇺🇸 English</option>
         <option value="es">🇪🇸 Español</option>
@@ -23,16 +23,13 @@
     </div>
   </header>
 
-  <!-- Main Application Wrapper -->
   <main class="app-container">
     
-    <!-- Hero Header -->
     <div class="hero-section">
       <h2 id="search-title">Medical information, simplified.</h2>
       <p id="search-subtitle" class="subtitle">Understand your diagnosis and next steps in clear, everyday language.</p>
     </div>
 
-    <!-- Modern Search Engine Box -->
     <div class="search-box">
       <div class="search-input-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -41,156 +38,33 @@
       <button id="search-btn" onclick="runSearch()">Search</button>
     </div>
 
-    <!-- Floating Interactive Results Card -->
+    <div class="quick-tags">
+      <span>Popular:</span>
+      <button type="button" class="tag-btn" onclick="quickSearch('blood_pressure')">Blood Pressure</button>
+      <button type="button" class="tag-btn" onclick="quickSearch('diabetes')">Diabetes</button>
+      <button type="button" class="tag-btn" onclick="quickSearch('asthma')">Asthma</button>
+      <button type="button" class="tag-btn" onclick="quickSearch('cholesterol')">Cholesterol</button>
+      <button type="button" class="tag-btn" onclick="quickSearch('anemia')">Anemia</button>
+    </div>
+
     <div id="results-card" style="display: none;">
+      <span id="res-badge" class="category-badge"></span>
+      <h1 id="res-title"></h1>
       
-      <!-- ================= HYPERTENSION CARD ================= -->
-      <div id="content-blood_pressure-en" class="lang-content" style="display: none;">
-        <span class="category-badge">Heart Health</span>
-        <h1>High Blood Pressure (Hypertension)</h1>
-        <div class="info-section">
-          <h3>What is it?</h3>
-          <p>Imagine your blood vessels are like a flexible garden hose. Blood flows through them to keep you healthy. High blood pressure means the blood is pushing way too hard against the inside walls of the hose. Over time, this constant heavy pressure can strain and hurt your heart, brain, and eyes.</p>
-        </div>
-        <div class="info-section">
-          <h3>How to change your lifestyle:</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>Eat Less Salt:</strong> Cut back on canned foods, chips, and fast food. Salt traps extra water in your blood, raising the pressure.</div>
-            <div class="action-item"><strong>Move Daily:</strong> Walk or exercise for 30 minutes every day. This strengthens your heart so it pumps blood with less effort.</div>
-          </div>
-        </div>
+      <div class="info-section">
+        <h3 id="res-what-label">What is it?</h3>
+        <p id="res-what-text"></p>
       </div>
 
-      <div id="content-blood_pressure-es" class="lang-content" style="display: none;">
-        <span class="category-badge">Salud del Corazón</span>
-        <h1>Presión Arterial Alta (Hipertensión)</h1>
-        <div class="info-section">
-          <h3>¿Qué es?</h3>
-          <p>Imagine que sus vasos sanguíneos son como una manguera de jardín. La presión alta significa que la sangre empuja con demasiada fuerza contra el interior de la manguera, lo que puede dañar su corazón con el tiempo.</p>
-        </div>
-        <div class="info-section">
-          <h3>Cambios de estilo de vida:</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>Coma menos sal:</strong> Evite la comida chatarra. La sal retiene agua en la sangre, lo que aumenta la presión.</div>
-            <div class="action-item"><strong>Muévase a diario:</strong> Camine 30 minutos al día para fortalecer su corazón.</div>
-          </div>
-        </div>
+      <div class="info-section">
+        <h3 id="res-lifestyle-label">General Lifestyle Recommendations:</h3>
+        <div id="res-action-grid" class="action-grid"></div>
       </div>
+    </div>
 
-      <div id="content-blood_pressure-zh" class="lang-content" style="display: none;">
-        <span class="category-badge">心脏健康</span>
-        <h1>高血压 (Hypertension)</h1>
-        <div class="info-section">
-          <h3>它是什么？</h3>
-          <p>想象一下，您的血管就像一根花园水管。高血压意味着血液在水管内部推得太用力，久而久之会伤害您的心脏。</p>
-        </div>
-        <div class="info-section">
-          <h3>改变生活方式：</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>少吃盐：</strong> 减少罐头和快餐。盐会锁住血液中多余的水分，从而增高压力。</div>
-            <div class="action-item"><strong>每天运动：</strong> 每天散步30分钟，让您的心脏更强壮。</div>
-          </div>
-        </div>
-      </div>
+    <p class="disclaimer"><strong>Disclaimer:</strong> Educational project only based on public CDC/NIH resources. Not medical advice, diagnosis, or treatment.</p>
+  </main>
 
-      <div id="content-blood_pressure-am" class="lang-content" style="display: none;">
-        <span class="category-badge">የልብ ጤና</span>
-        <h1>ከፍተኛ የደም ግፊት (Hypertension)</h1>
-        <div class="info-section">
-          <h3>ምንድን ነው?</h3>
-          <p>የደም ሥሮችዎን ልክ እንደ ውሃ ቱቦ ያስቡ። ከፍተኛ የደም ግፊት ማለት ደም በቱቦው ውስጥ በጣም በኃይል እየገፋ ነው ማለት ነው፣ ይህም ልብዎን ሊጎዳ ይችላል።</p>
-        </div>
-        <div class="info-section">
-          <h3>የአኗኗር ዘይቤ ለውጦች፦</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>ጨው መቀነስ፦</strong> የታሸጉ ምግቦችን ይቀንሱ። ጨው በደምዎ ውስጥ ተጨማሪ ውሃ እንዲይዝ ስለሚያደርግ ግፊቱን ይጨምራል።</div>
-            <div class="action-item"><strong>በየቀኑ መንቀሳቀս፦</strong> ልብዎ እንዲጠነክር በየቀኑ ለ30 ደቂቃ ያህል ይራመዱ።</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-blood_pressure-vi" class="lang-content" style="display: none;">
-        <span class="category-badge">Sức Khỏe Tim Mạch</span>
-        <h1>Cao Huyết Áp (Tăng Huyết Áp)</h1>
-        <div class="info-section">
-          <h3>Nó là gì?</h3>
-          <p>Hãy tưởng tượng mạch máu giống như một vòi ống nước. Cao huyết áp có nghĩa là máu đang đẩy quá mạnh vào thành trong của ống, gây hại cho tim theo thời gian.</p>
-        </div>
-        <div class="info-section">
-          <h3>Thay đổi lối sống:</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>Ăn ít muối:</strong> Giảm đồ ăn hộp và đồ ăn nhanh. Muối giữ thêm nước trong máu, làm tăng huyết áp.</div>
-            <div class="action-item"><strong>Vận động hàng ngày:</strong> Đi bộ 30 phút mỗi ngày để giúp tim khỏe mạnh hơn.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= DIABETES CARD ================= -->
-      <div id="content-diabetes-en" class="lang-content" style="display: none;">
-        <span class="category-badge">Metabolism</span>
-        <h1>Diabetes (High Blood Sugar)</h1>
-        <div class="info-section">
-          <h3>What is it?</h3>
-          <p>When you eat, your body turns that food into sugar to give you energy. Normally, your body uses a special "key" called insulin to unlock your cells and let the sugar go inside them. Diabetes means your body has lost or broken that key, causing sugar to pile up dangerously inside your bloodstream instead of fueling your cells.</p>
-        </div>
-        <div class="info-section">
-          <h3>How to change your lifestyle:</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>Balance Your Plate:</strong> Cut back sharply on sugary drinks, juices, pastries, and white bread. Choose whole grains and vegetables.</div>
-            <div class="action-item"><strong>Stay Active:</strong> Regular physical movement acts like a temporary key, letting your body clear sugar out of your blood naturally.</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-diabetes-es" class="lang-content" style="display: none;">
-        <span class="category-badge">Metabolismo</span>
-        <h1>Diabetes (Azúcar Alta)</h1>
-        <div class="info-section">
-          <h3>¿Qué es?</h3>
-          <p>Su cuerpo convierte la comida en azúcar para tener energía usando una llave llamada insulina. La diabetes significa que el cuerpo perdió esa llave, haciendo que el azúcar se acumule de forma peligrosa en la sangre.</p>
-        </div>
-        <div class="info-section">
-          <h3>Cambios de estilo de vida:</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>Evite lo dulce:</strong> Elimine jugos, sodas y pan blanco. Prefiera vegetales.</div>
-            <div class="action-item"><strong>Haga ejercicio:</strong> Moverse ayuda a limpiar el azúcar en la sangre de forma natural.</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-diabetes-zh" class="lang-content" style="display: none;">
-        <span class="category-badge">新陈代谢</span>
-        <h1>糖尿病 (High Blood Sugar)</h1>
-        <div class="info-section">
-          <h3>它是什么？</h3>
-          <p>您的身体将食物转化为糖分以提供能量，并使用一种叫做胰岛素的“钥匙”让糖分进入细胞。糖尿病意味着您的身体失去了这把钥匙，导致糖分在血液中危险地堆积。</p>
-        </div>
-        <div class="info-section">
-          <h3>改变生活方式：</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>控糖饮食：</strong> 减少含糖饮料、果汁和白面包的摄入。多吃蔬菜。</div>
-            <div class="action-item"><strong>坚持运动：</strong> 每天运动，帮助身体自然消耗血液中的糖分。</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-diabetes-am" class="lang-content" style="display: none;">
-        <span class="category-badge">ሜታቦሊዝም</span>
-        <h1>ስኳር በሽታ (Diabetes)</h1>
-        <div class="info-section">
-          <h3>ምንድን ነው?</h3>
-          <p>ሰውነትዎ የሚበሉትን ምግብ ለኃይል ወደ ስኳር ይለውጠዋል። ይህንን ስኳር ወደ ህዋሳት ለማስገባት ኢንሱሊን የሚባል ቁልፍ ይጠቀማል። ስኳር በሽታ ማለት ሰውነትዎ ይህንን ቁልፍ ሲያጣ እና ስኳር በደምዎ ውስጥ በአደገኛ ሁኔታ ሲከማች ነው።</p>
-        </div>
-        <div class="info-section">
-          <h3>የአኗኗር ዘይቤ ለውጦች፦</h3>
-          <div class="action-grid">
-            <div class="action-item"><strong>ጣፋጭ መቀነስ፦</strong> ጣፋጭ መጠጦችን፣ ጁሶችን እና ነጭ ዳቦን ይቀንሱ። አትክልቶችን ያብዙ።</div>
-            <div class="action-item"><strong>አካል ብቃት እንቅስቃሴ፦</strong> ስኳርን ከደምዎ ውስጥ ለማስወገድ በየቀኑ ይንቀሳቀሱ።</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="content-diabetes-vi" class="lang-content" style="display: none;">
-        <span class="category-badge">Chuyển Hóa</span>
-        <h1>Bệnh Tiểu Đường (Đường Huyết Cao)</h1>
-
+  <script src="script.js"></script>
+</body>
+</html>
