@@ -1,7 +1,7 @@
 let currentLang = 'en';
 let activeConditionId = '';
 
-// Register Service Worker for Offline Functionality (PWA)
+// Register Service Worker for Offline Functionality
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
@@ -16,7 +16,7 @@ function toggleTheme() {
   localStorage.setItem('theme', newTheme);
 }
 
-// UI Setup & Keyboard Shortcuts
+// UI Setup
 document.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme') || 'light';
   document.body.setAttribute('data-theme', savedTheme);
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Interface Translations
+// UI Text Translations
 const uiTranslations = {
   en: {
     title: "Medical information, simplified.",
@@ -48,473 +48,177 @@ const uiTranslations = {
     whatLabel: "¿Qué es?",
     lifestyleLabel: "Consejos diarios sencillos:",
     emergencyLabel: "Cuándo buscar atención inmediata:"
+  },
+  zh: {
+    title: "简化医疗信息。",
+    subtitle: "用简单通俗的语言了解您的健康状况。",
+    placeholder: "搜索疾病（如：糖尿病、流感、痛风）...",
+    button: "搜索",
+    whatLabel: "这是什么？",
+    lifestyleLabel: "日常简单建议：",
+    emergencyLabel: "何时需要立即就医："
+  },
+  am: {
+    title: "የሕክምና መረጃ፣ በቀላል መንገድ።",
+    subtitle: "ጤናዎን በቀላል እና በዕለት ተዕለት ቋንቋ ይረዱ።",
+    placeholder: "በሽታ ይፈልጉ (ምሳሌ፦ ስኳር፣ ጉንፋን)...",
+    button: "ፈልግ",
+    whatLabel: "ምንድን ነው?",
+    lifestyleLabel: "ቀላል የዕለት ተዕለት ምክሮች፦",
+    emergencyLabel: "ወዲያውኑ ሕክምና ማግኘት ያለብዎት መቼ ነው፦"
+  },
+  vi: {
+    title: "Thông tin y tế, đơn giản hóa.",
+    subtitle: "Hiểu về sức khỏe của bạn bằng ngôn ngữ dễ hiểu hàng ngày.",
+    placeholder: "Tìm kiếm bệnh (ví dụ: Tiểu đường, Cúm)...",
+    button: "Tìm kiếm",
+    whatLabel: "Nó là gì?",
+    lifestyleLabel: "Mẹo đơn giản hàng ngày:",
+    emergencyLabel: "Khi nào cần đi cấp cứu ngay:"
   }
-  // You can add more UI translations here for zh, am, vi as needed
 };
 
-// Expanded Medical Database (All 49 Conditions)
+// Medical Database (Part 1: Conditions 1 - 25)
 const medicalDatabase = [
   // --- 🫀 Heart, Blood, & Circulation ---
   {
     id: 'blood_pressure',
-    keywords: ['high blood pressure', 'hypertension', 'blood pressure'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'High Blood Pressure (Hypertension)' },
-    emergency: { en: 'Seek emergency care if you experience severe chest pain, sudden vision changes, severe headache, or trouble breathing.' },
-    whatIsIt: { en: 'Your heart works too hard pumping blood, putting extra pressure on your blood vessels.' },
-    lifestyle: { en: ['<strong>Cut Back on Salt:</strong> Helps lower blood volume and pressure.', '<strong>Daily Walks:</strong> Keeps heart muscles strong and relaxed.'] }
+    keywords: ['high blood pressure', 'hypertension', 'blood pressure', 'presion alta', '高血压', 'ደም ግፊት', 'cao huyết áp'],
+    category: { en: 'Heart, Blood, & Circulation', es: 'Corazón, Sangre y Circulación', zh: '心脏、血液与循环', am: 'ልብ፣ ደም እና የደም ዝውውር', vi: 'Tim, Máu & Tuần Hoàn' },
+    title: { en: 'High Blood Pressure (Hypertension)', es: 'Presión Arterial Alta', zh: '高血压', am: 'ከፍተኛ የደም ግፊት', vi: 'Cao Huyết Áp' },
+    emergency: { 
+      en: 'Seek emergency care if you experience severe chest pain, sudden vision changes, severe headache, or trouble breathing.',
+      es: 'Busque atención de emergencia si tiene dolor de pecho intenso, cambios en la vista o dificultad para respirar.',
+      zh: '如果出现剧烈胸痛、突发视力变化、剧烈头痛或呼吸困难，请立即就医。',
+      am: 'ከባድ የደረት ህመም፣ የዕይታ መታወክ፣ ከባድ ራስ ምታት ወይም የመተንፈስ ችግር ካለብዎት ወዲያውኑ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi cấp cứu ngay nếu bị đau ngực dữ dội, mờ mắt đột ngột, đau đầu dữ dội hoặc khó thở.'
+    },
+    whatIsIt: { 
+      en: 'Heart works too hard pumping blood, putting extra pressure on your blood vessels.',
+      es: 'El corazón trabaja demasiado para bombear sangre, aumentando la presión en las arterias.',
+      zh: '心脏泵血过于费力，对血管壁造成额外压力。',
+      am: 'ልብ ደምን ለመግፋት በጣም ስለሚጥር በደም ሥሮች ላይ ከመጠን በላይ ጫና ይፈጥራል።',
+      vi: 'Tim phải hoạt động quá sức để bơm máu, gây áp lực lên thành mạch.'
+    },
+    lifestyle: { 
+      en: ['<strong>Cut Back on Salt:</strong> Helps lower blood volume and pressure.', '<strong>Daily Walks:</strong> Keeps heart muscles strong and relaxed.'],
+      es: ['<strong>Reduzca la sal:</strong> Ayuda a bajar la presión.', '<strong>Caminatas diarias:</strong> Mantiene el corazón fuerte.'],
+      zh: ['<strong>减少盐分摄入：</strong> 有助降低血压。', '<strong>每天散步：</strong> 保持心肌强壮。'],
+      am: ['<strong>ጨው መቀነስ፦</strong> የደም ግፊትን ለመቀነስ ይረዳል።', '<strong>የእለት ተእለት እርምጃ፦</strong> የልብ ጡንቻን ያጠናክራል።'],
+      vi: ['<strong>Giảm ăn muối:</strong> Giúp hạ huyết áp.', '<strong>Đi bộ hàng ngày:</strong> Giúp cơ tim khỏe mạnh.']
+    }
   },
   {
     id: 'cholesterol',
-    keywords: ['high cholesterol', 'fat', 'cholesterol'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'High Cholesterol' },
-    emergency: { en: 'Seek urgent medical attention if you experience sudden chest tightness or left arm pain.' },
-    whatIsIt: { en: 'Fat buildup in the blood tubes that slows down healthy blood flow.' },
-    lifestyle: { en: ['<strong>Eat More Fiber:</strong> Oats and beans help clear out fat.', '<strong>Limit Fried Foods:</strong> Protects your blood vessels.'] }
+    keywords: ['high cholesterol', 'fat', 'cholesterol', 'colesterol', '高胆固醇', 'ኮሌስትሮል', 'cholesterol cao'],
+    category: { en: 'Heart, Blood, & Circulation', es: 'Corazón, Sangre y Circulación', zh: '心脏、血液与循环', am: 'ልብ፣ ደም እና የደም ዝውውር', vi: 'Tim, Máu & Tuần Hoàn' },
+    title: { en: 'High Cholesterol', es: 'Colesterol Alto', zh: '高胆固醇', am: 'ከፍተኛ ኮሌስትሮል', vi: 'Cholesterol Cao' },
+    emergency: { 
+      en: 'Seek urgent medical attention if you experience sudden chest tightness or left arm pain.',
+      es: 'Busque ayuda médica si siente opresión repentina en el pecho o dolor en el brazo izquierdo.',
+      zh: '如果突发胸闷或左臂疼痛，请立即就医。',
+      am: 'ድንገተኛ የደረት ወጋ ወይም የግራ እጅ ህመም ካጋጠመዎት ወዲያውኑ ህክምና ያግኙ።',
+      vi: 'Đi khám ngay if bị tức ngực đột ngột hoặc đau tay trái.'
+    },
+    whatIsIt: { 
+      en: 'Fat buildup in the blood tubes that slows down healthy blood flow.',
+      es: 'Acumulación de grasa en las arterias que frena la circulación sanguínea.',
+      zh: '血管内脂肪堆积，导致血液流动变慢。',
+      am: 'በደም ሥሮች ውስጥ ስብ ስለሚከማች የደም ዝውውርን ያደናቅፋል።',
+      vi: 'Mỡ tích tụ trong lòng mạch làm chậm dòng máu.'
+    },
+    lifestyle: { 
+      en: ['<strong>Eat More Fiber:</strong> Oats and beans help clear out fat.', '<strong>Limit Fried Foods:</strong> Protects your blood vessels.'],
+      es: ['<strong>Coma más fibra:</strong> La avena ayuda a eliminar grasa.', '<strong>Evite fritos:</strong> Protege sus arterias.'],
+      zh: ['<strong>多吃高纤食物：</strong> 燕麦和豆类有助于清除脂肪。', '<strong>油炸食物少吃：</strong> 保护血管。'],
+      am: ['<strong>ፋይበር ያላቸውን ምግቦች ይመገቡ፦</strong> አጃ እና ባቄላ ስብን ያስወግዳሉ።', '<strong>የተጠበሱ ምግቦችን ይቀንሱ፦</strong> የደም ሥርዎን ይጠብቁ።'],
+      vi: ['<strong>Ăn nhiều chất xơ:</strong> Yến mạch và đậu giúp đào thải mỡ.', '<strong>Hạn chế đồ chiên rán:</strong> Bảo vệ mạch máu.']
+    }
   },
   {
     id: 'anemia',
-    keywords: ['anemia', 'iron', 'weakness'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'Anemia (Low Iron)' },
-    emergency: { en: 'Seek emergency care if you faint or experience severe shortness of breath.' },
-    whatIsIt: { en: 'Low iron in the blood making you feel constantly weak, tired, and cold.' },
-    lifestyle: { en: ['<strong>Eat Iron-Rich Foods:</strong> Spinach, beans, and red meat.', '<strong>Add Vitamin C:</strong> Helps your body absorb iron.'] }
+    keywords: ['anemia', 'iron', 'weakness', 'hierro', '贫血', 'አኔሚያ', 'thiếu máu'],
+    category: { en: 'Heart, Blood, & Circulation', es: 'Corazón, Sangre y Circulación', zh: '心脏、血液与循环', am: 'ልብ፣ ደም እና የደም ዝውውር', vi: 'Tim, Máu & Tuần Hoàn' },
+    title: { en: 'Anemia (Low Iron)', es: 'Anemia (Hierro Bajo)', zh: '贫血（缺铁）', am: 'የደም ማነስ (የብረት እጥረት)', vi: 'Thiếu Máu (Thiếu Sắt)' },
+    emergency: { 
+      en: 'Seek emergency care if you faint or experience severe shortness of breath.',
+      es: 'Busque atención de emergencia si se desmaya o le falta el aire de forma grave.',
+      zh: '如果晕厥或严重呼吸困难，请立即就医。',
+      am: 'ራሱን ካሳተዎት ወይም የመተንፈስ እጥረት ካጋጠመዎት ወዲያውኑ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi cấp cứu ngay nếu ngất xỉu hoặc khó thở nặng.'
+    },
+    whatIsIt: { 
+      en: 'Low iron in the blood making you feel constantly weak, tired, and cold.',
+      es: 'Falta de hierro en la sangre que causa debilidad, cansancio y frío constante.',
+      zh: '血液中缺铁，导致感到持续虚弱、疲劳和怕冷。',
+      am: 'በደም ውስጥ የብረት እጥረት በመኖሩ ምክንያት ሁልጊዜ ድካም እና ብርድ እንዲሰማዎት ያደርጋል።',
+      vi: 'Thiếu sắt trong máu khiến bạn luôn cảm thấy yếu ớt, mệt mỏi và lạnh.'
+    },
+    lifestyle: { 
+      en: ['<strong>Eat Iron-Rich Foods:</strong> Spinach, beans, and red meat.', '<strong>Add Vitamin C:</strong> Helps your body absorb iron.'],
+      es: ['<strong>Coma alimentos ricos en hierro:</strong> Espinacas y carnes.', '<strong>Vitamina C:</strong> Ayuda a absorber el hierro.'],
+      zh: ['<strong>多吃补铁食物：</strong> 菠菜、豆类和红肉。', '<strong>补充维生素C：</strong> 帮助铁质吸收。'],
+      am: ['<strong>በብረት የበለፀጉ ምግቦችን ይመገቡ፦</strong> ቆስጣ፣ ባቄላ እና ቀይ ሥጋ።', '<strong>ቪታሚን ሲ ይውሰዱ፦</strong> ብረት ወደ ሰውነት እንዲመጣ ይረዳል።'],
+      vi: ['<strong>Ăn thực phẩm giàu sắt:</strong> Rau chân vịt, đậu, thịt đỏ.', '<strong>Bổ sung Vitamin C:</strong> Giúp hấp thụ sắt tốt hơn.']
+    }
   },
   {
     id: 'heart_attack',
-    keywords: ['heart attack', 'chest pain'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'Heart Attack' },
-    emergency: { en: 'CALL 911 IMMEDIATELY if you feel crushing chest pain, or pain radiating to your jaw or arm.' },
-    whatIsIt: { en: 'A blocked tube stopping blood from reaching the heart.' },
-    lifestyle: { en: ['<strong>Call 911:</strong> Do not drive yourself to the hospital.', '<strong>Chew Aspirin:</strong> If advised by emergency dispatchers.'] }
+    keywords: ['heart attack', 'chest pain', 'ataque al corazón', '心脏病发作', 'የልብ ህመም', 'đau tim'],
+    category: { en: 'Heart, Blood, & Circulation', es: 'Corazón, Sangre y Circulación', zh: '心脏、血液与循环', am: 'ልብ፣ ደም እና የደም ዝውውር', vi: 'Tim, Máu & Tuần Hoàn' },
+    title: { en: 'Heart Attack', es: 'Ataque al Corazón', zh: '心脏病发作', am: 'የልብ ህመም (Heart Attack)', vi: 'Cơn Đau Tim' },
+    emergency: { 
+      en: 'CALL 911 IMMEDIATELY if you feel crushing chest pain, or pain radiating to your jaw or arm.',
+      es: '¡LLAME AL 911 DE INMEDIATO si siente dolor opresivo en el pecho, mandíbula o brazo!',
+      zh: '如果感到胸部压迫性剧痛、疼痛放射至手臂或下巴，请立即拨打急救电话！',
+      am: 'ከባድ የደረት ህመም፣ ወደ እጅ ወይም መንገጭላ የሚሄድ ህመም ካለ ወዲያውኑ ወደ 911 ይደውሉ!',
+      vi: 'GỌI CẤP CỨU NGAY if bị đau thắt ngực lan ra tay hoặc hàm!'
+    },
+    whatIsIt: { 
+      en: 'A blocked tube stopping blood from reaching the heart.',
+      es: 'Un bloqueo en una arteria que impide que la sangre llegue al corazón.',
+      zh: '血管堵塞导致血液无法到达心脏。',
+      am: 'የደም ሥር በመደፈኑ ምክንያት ደም ወደ ልብ እንዳይደርስ ሲከለከል የሚከሰት ነው።',
+      vi: 'Mạch máu bị tắc khiến máu không thể đến nuôi tim.'
+    },
+    lifestyle: { 
+      en: ['<strong>Call 911:</strong> Do not drive yourself to the hospital.', '<strong>Chew Aspirin:</strong> If advised by emergency dispatchers.'],
+      es: ['<strong>Llame al 911:</strong> No maneje usted mismo.', '<strong>Aspirina:</strong> Solo si se lo indica el paramédico.'],
+      zh: ['<strong>立即叫救护车：</strong> 切勿自行驾车前往医院。', '<strong>遵医嘱服用阿司匹林。</strong>'],
+      am: ['<strong>ወደ ህክምና ይደውሉ፦</strong> እራስዎ መኪና አያሽከረክሩ።', '<strong>አስপিরিন ያመዝምዙ፦</strong> ከህክምና ባለሙያ ካዘዙዎት ብቻ።'],
+      vi: ['<strong>Gọi cấp cứu:</strong> Không tự lái xe đến viện.', '<strong>Nhai Aspirin:</strong> Nếu được nhân viên y tế hướng dẫn.']
+    }
   },
   {
     id: 'stroke',
-    keywords: ['stroke', 'brain attack', 'face drooping'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'Stroke' },
-    emergency: { en: 'CALL 911 IMMEDIATELY. Remember FAST: Face drooping, Arm weakness, Speech difficulty, Time to call 911.' },
-    whatIsIt: { en: 'A blocked or burst tube stopping blood in the brain.' },
-    lifestyle: { en: ['<strong>Act Fast:</strong> Time is critical to saving brain function.'] }
-  },
-  {
-    id: 'dvt',
-    keywords: ['blood clots', 'dvt', 'leg pain'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'Blood Clots (DVT)' },
-    emergency: { en: 'Seek immediate care if you have sudden chest pain or difficulty breathing, which means a clot may have moved to your lungs.' },
-    whatIsIt: { en: 'Jelly-like blood lumps trapped in the legs, causing swelling and pain.' },
-    lifestyle: { en: ['<strong>Move Around:</strong> Don\'t sit still for long periods (like on long flights).'] }
-  },
-  {
-    id: 'pad',
-    keywords: ['poor circulation', 'pad', 'cold legs'],
-    category: { en: 'Heart, Blood, & Circulation' },
-    title: { en: 'Poor Circulation (PAD)' },
-    emergency: { en: 'Seek care if a leg or foot suddenly turns pale, blue, or cold.' },
-    whatIsIt: { en: 'Cold or painful legs from bad blood flow.' },
-    lifestyle: { en: ['<strong>Quit Smoking:</strong> Smoking severely restricts blood flow.', '<strong>Walk Regularly:</strong> Helps build new blood pathways.'] }
-  },
-
-  // --- 🫁 Lungs & Breathing ---
-  {
-    id: 'asthma',
-    keywords: ['asthma', 'breathing', 'wheezing'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'Asthma' },
-    emergency: { en: 'Go to the ER if your rescue inhaler isn\'t working or you can\'t speak in full sentences.' },
-    whatIsIt: { en: 'Swollen breathing tubes that squeeze shut.' },
-    lifestyle: { en: ['<strong>Avoid Triggers:</strong> Keep away from smoke, strong perfumes, and dust.'] }
-  },
-  {
-    id: 'flu',
-    keywords: ['flu', 'influenza', 'fever'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'The Flu (Influenza)' },
-    emergency: { en: 'Seek care for severe chest pain, trouble breathing, or confusion.' },
-    whatIsIt: { en: 'A severe viral infection of the nose and lungs.' },
-    lifestyle: { en: ['<strong>Rest Completely:</strong> Stay home and sleep.', '<strong>Hydrate:</strong> Drink lots of water and warm broth.'] }
-  },
-  {
-    id: 'pneumonia',
-    keywords: ['pneumonia', 'lung infection'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'Pneumonia' },
-    emergency: { en: 'Seek immediate care for high persistent fever or sharp chest pain when breathing.' },
-    whatIsIt: { en: 'A deep lung infection filled with fluid.' },
-    lifestyle: { en: ['<strong>Get Lots of Rest:</strong> Your body needs extreme energy to fight it.', '<strong>Sip Warm Liquids:</strong> Helps loosen chest fluid.'] }
-  },
-  {
-    id: 'bronchitis',
-    keywords: ['bronchitis', 'chest cold', 'cough'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'Bronchitis' },
-    emergency: { en: 'Seek care if you cough up blood or have a fever over 101°F (38.3°C) for several days.' },
-    whatIsIt: { en: 'Irritated chest tubes causing a deep, painful cough.' },
-    lifestyle: { en: ['<strong>Use a Humidifier:</strong> Moist air soothes the chest tubes.', '<strong>Avoid Smoke:</strong> Do not smoke or be around second-hand smoke.'] }
-  },
-  {
-    id: 'copd',
-    keywords: ['copd', 'smokers cough', 'emphysema'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'COPD' },
-    emergency: { en: 'Seek emergency help if you cannot catch your breath or your lips turn blue.' },
-    whatIsIt: { en: 'Long-term lung damage usually from smoke or dust.' },
-    lifestyle: { en: ['<strong>Stop Smoking:</strong> This is the #1 way to slow down the damage.', '<strong>Practice Pursed-Lip Breathing:</strong> Breathe in through the nose, out slowly through pursed lips.'] }
-  },
-  {
-    id: 'sleep_apnea',
-    keywords: ['sleep apnea', 'snoring', 'tired'],
-    category: { en: 'Lungs & Breathing' },
-    title: { en: 'Sleep Apnea' },
-    emergency: { en: 'Talk to a doctor if you wake up gasping or choking for air.' },
-    whatIsIt: { en: 'Stopping breathing for short moments while sleeping.' },
-    lifestyle: { en: ['<strong>Sleep on Your Side:</strong> Prevents your tongue from blocking the airway.'] }
-  },
-
-  // --- 🧠 Brain & Mental Health ---
-  {
-    id: 'migraine',
-    keywords: ['migraine', 'headache', 'vomiting'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Migraine' },
-    emergency: { en: 'Seek care if it is the "worst headache of your life" or comes on like a sudden thunderclap.' },
-    whatIsIt: { en: 'Severe, blinding headaches often causing vomiting and sensitivity to light/sound.' },
-    lifestyle: { en: ['<strong>Rest in a Dark Room:</strong> Turn off all lights and screens.', '<strong>Hydrate Early:</strong> Drink water as soon as you feel it coming.'] }
-  },
-  {
-    id: 'anxiety',
-    keywords: ['anxiety', 'panic', 'worry'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Anxiety' },
-    emergency: { en: 'Seek help if a panic attack feels like a heart attack (severe chest pain).' },
-    whatIsIt: { en: 'Severe, constant worry that causes chest tightness and a racing heart.' },
-    lifestyle: { en: ['<strong>Box Breathing:</strong> Breathe in 4 seconds, hold 4 seconds, exhale 4 seconds.', '<strong>Limit Caffeine:</strong> Coffee can make anxiety much worse.'] }
-  },
-  {
-    id: 'depression',
-    keywords: ['depression', 'sadness', 'tired'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Depression' },
-    emergency: { en: 'Call the suicide hotline (988 in the US) or go to the ER if you have thoughts of hurting yourself.' },
-    whatIsIt: { en: 'Long-term, heavy sadness that steals your energy and motivation.' },
-    lifestyle: { en: ['<strong>Seek Support:</strong> Talk to a therapist or trusted friend.', '<strong>Small Steps:</strong> Focus on just doing one small task a day.'] }
-  },
-  {
-    id: 'concussion',
-    keywords: ['concussion', 'head injury'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Concussion' },
-    emergency: { en: 'Go to the ER if you experience repeated vomiting, a worsening headache, or unequal pupil sizes.' },
-    whatIsIt: { en: 'A brain bruise from a hard hit to the head.' },
-    lifestyle: { en: ['<strong>Mental Rest:</strong> Avoid screens, reading, and loud noises for a few days.'] }
-  },
-  {
-    id: 'dementia',
-    keywords: ['dementia', 'alzheimers', 'memory'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Dementia / Alzheimer\'s' },
-    emergency: { en: 'Seek immediate help if the person wanders off and gets lost.' },
-    whatIsIt: { en: 'Memory fading and getting easily lost due to brain changes over time.' },
-    lifestyle: { en: ['<strong>Keep a Routine:</strong> Predictable days reduce confusion.', '<strong>Safety First:</strong> Remove tripping hazards and secure doors.'] }
-  },
-  {
-    id: 'seizures',
-    keywords: ['seizures', 'epilepsy', 'shaking'],
-    category: { en: 'Brain & Mental Health' },
-    title: { en: 'Seizures (Epilepsy)' },
-    emergency: { en: 'Call 911 if a seizure lasts more than 5 minutes or if the person doesn\'t wake up afterward.' },
-    whatIsIt: { en: 'Sudden electrical storms in the brain causing shaking or staring blankly.' },
-    lifestyle: { en: ['<strong>Stay Safe:</strong> If someone is seizing, gently roll them on their side and cushion their head. Do not put anything in their mouth.'] }
-  },
-
-  // --- 🪓 Joints, Bones, & Muscles ---
-  {
-    id: 'arthritis',
-    keywords: ['arthritis', 'joint pain', 'stiff'],
-    category: { en: 'Joints, Bones, & Muscles' },
-    title: { en: 'Arthritis' },
-    emergency: { en: 'See a doctor if a joint suddenly becomes swollen, red, hot, and impossible to move.' },
-    whatIsIt: { en: 'Swollen, stiff joints that hurt when moving.' },
-    lifestyle: { en: ['<strong>Gentle Movement:</strong> Swimming or walking keeps joints lubricated.', '<strong>Warm Compresses:</strong> Helps loosen stiff joints in the morning.'] }
-  },
-  {
-    id: 'gout',
-    keywords: ['gout', 'toe pain', 'crystals'],
-    category: { en: 'Joints, Bones, & Muscles' },
-    title: { en: 'Gout' },
-    emergency: { en: 'Seek care if the severe joint pain is accompanied by a high fever.' },
-    whatIsIt: { en: 'Sharp crystals in the joints causing sudden, massive toe pain.' },
-    lifestyle: { en: ['<strong>Drink Lots of Water:</strong> Helps flush out the crystals.', '<strong>Avoid Red Meat & Alcohol:</strong> These trigger flare-ups.'] }
-  },
-  {
-    id: 'osteoporosis',
-    keywords: ['osteoporosis', 'weak bones', 'fracture'],
-    category: { en: 'Joints, Bones, & Muscles' },
-    title: { en: 'Osteoporosis' },
-    emergency: { en: 'Go to the ER immediately if you fall and cannot put weight on a limb, or experience severe back pain.' },
-    whatIsIt: { en: 'Weak, hollow bones that break easily during slips.' },
-    lifestyle: { en: ['<strong>Calcium & Vitamin D:</strong> Essential for keeping remaining bone strong.', '<strong>Fall Prevention:</strong> Remove loose rugs and wear supportive shoes.'] }
-  },
-  {
-    id: 'sciatica',
-    keywords: ['sciatica', 'back pain', 'leg pain'],
-    category: { en: 'Joints, Bones, & Muscles' },
-    title: { en: 'Sciatica' },
-    emergency: { en: 'Go to the ER if you lose control of your bowels/bladder or experience sudden severe numbness in your legs.' },
-    whatIsIt: { en: 'A pinched back nerve causing shooting leg pain.' },
-    lifestyle: { en: ['<strong>Gentle Stretching:</strong> Yoga or specific back stretches help relieve pressure.', '<strong>Avoid Heavy Lifting:</strong> Protect your lower back.'] }
-  },
-  {
-    id: 'carpal_tunnel',
-    keywords: ['carpal tunnel', 'wrist pain', 'numb fingers'],
-    category: { en: 'Joints, Bones, & Muscles' },
-    title: { en: 'Carpal Tunnel' },
-    emergency: { en: 'Consult a doctor if you start dropping objects frequently due to hand weakness.' },
-    whatIsIt: { en: 'Pinched wrist nerves making fingers go numb.' },
-    lifestyle: { en: ['<strong>Wear a Wrist Splint:</strong> Especially at night to keep the wrist straight.', '<strong>Take Keyboard Breaks:</strong> Rest your hands during repetitive work.'] }
-  },
-
-  // --- 💧 Urinary, Kidney, & Blood Sugar ---
-  {
-    id: 'diabetes',
-    keywords: ['diabetes', 'sugar', 'blood sugar'],
-    category: { en: 'Urinary, Kidney, & Blood Sugar' },
-    title: { en: 'Diabetes (Type 2)' },
-    emergency: { en: 'Seek immediate care for extreme confusion, fruity-smelling breath, or passing out.' },
-    whatIsIt: { en: 'The body cannot process sugar from food properly, leaving it trapped in the blood.' },
-    lifestyle: { en: ['<strong>Watch Sugary Drinks:</strong> Switch soda and juice for water.', '<strong>Walk After Meals:</strong> Helps your muscles burn off the extra sugar.'] }
-  },
-  {
-    id: 'uti',
-    keywords: ['uti', 'urinary tract infection', 'burning pee'],
-    category: { en: 'Urinary, Kidney, & Blood Sugar' },
-    title: { en: 'Urinary Tract Infection (UTI)' },
-    emergency: { en: 'Seek urgent care for high fever, shaking chills, or severe lower back pain (signs of a kidney infection).' },
-    whatIsIt: { en: 'Bacteria in the bladder causing burning pee and a constant need to go.' },
-    lifestyle: { en: ['<strong>Drink Plenty of Water:</strong> Flushes the bacteria out.', '<strong>Don\'t Hold It:</strong> Use the bathroom as soon as you feel the urge.'] }
-  },
-  {
-    id: 'kidney_stones',
-    keywords: ['kidney stones', 'side pain'],
-    category: { en: 'Urinary, Kidney, & Blood Sugar' },
-    title: { en: 'Kidney Stones' },
-    emergency: { en: 'Go to the ER for unbearable pain, vomiting, or blood in the urine.' },
-    whatIsIt: { en: 'Sharp, tiny rocks in the body causing severe side pain.' },
-    lifestyle: { en: ['<strong>Hydrate constantly:</strong> Your urine should be clear or very pale yellow.', '<strong>Limit Salt:</strong> High sodium causes stones to form.'] }
-  },
-  {
-    id: 'ckd',
-    keywords: ['kidney disease', 'ckd', 'kidney failure'],
-    category: { en: 'Urinary, Kidney, & Blood Sugar' },
-    title: { en: 'Chronic Kidney Disease' },
-    emergency: { en: 'Seek care for severe swelling in your legs/face or intense shortness of breath.' },
-    whatIsIt: { en: 'Filter organs slowing down and failing to clean the blood.' },
-    lifestyle: { en: ['<strong>Control Blood Pressure:</strong> High blood pressure damages kidneys faster.', '<strong>Follow a Kidney-Friendly Diet:</strong> As prescribed by your doctor.'] }
-  },
-
-  // --- 🪵 Stomach & Digestion ---
-  {
-    id: 'gastroenteritis',
-    keywords: ['stomach flu', 'gastroenteritis', 'vomiting', 'diarrhea'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Gastroenteritis (Stomach Flu)' },
-    emergency: { en: 'Seek care if you cannot keep water down for 24 hours, have severe belly pain, or notice blood in your stool.' },
-    whatIsIt: { en: 'Severe vomiting and diarrhea from bad food or bugs.' },
-    lifestyle: { en: ['<strong>Sip Water Slowly:</strong> Prevents dehydration without upsetting the stomach.', '<strong>Eat Bland Foods:</strong> Try toast, rice, or bananas when you feel ready.'] }
-  },
-  {
-    id: 'gerd',
-    keywords: ['acid reflux', 'gerd', 'heartburn'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Acid Reflux (GERD)' },
-    emergency: { en: 'Go to the ER if heartburn is accompanied by severe chest pressure or arm pain (to rule out a heart attack).' },
-    whatIsIt: { en: 'Stomach acid burning the throat after eating.' },
-    lifestyle: { en: ['<strong>Stay Upright:</strong> Do not lie down for 2 hours after eating.', '<strong>Eat Smaller Meals:</strong> A very full stomach pushes acid upward.'] }
-  },
-  {
-    id: 'ulcers',
-    keywords: ['stomach ulcers', 'ulcer', 'burning stomach'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Stomach Ulcers' },
-    emergency: { en: 'Seek emergency care if you vomit blood or your stool looks black and tarry.' },
-    whatIsIt: { en: 'Open sores inside the stomach causing burning pain.' },
-    lifestyle: { en: ['<strong>Avoid Ibuprofen/Advil:</strong> These pain relievers can make ulcers worse.', '<strong>Limit Spicy Foods & Alcohol:</strong> Reduces irritation.'] }
-  },
-  {
-    id: 'gallstones',
-    keywords: ['gallstones', 'gallbladder', 'right side pain'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Gallstones' },
-    emergency: { en: 'Seek immediate care for intense pain in the upper right belly that lasts for hours, or if your skin turns yellow (jaundice).' },
-    whatIsIt: { en: 'Small stones blocking digestive juices, causing right-side pain.' },
-    lifestyle: { en: ['<strong>Eat Low-Fat Meals:</strong> Greasy food forces the gallbladder to squeeze and causes pain.'] }
-  },
-  {
-    id: 'constipation',
-    keywords: ['constipation', 'cant poop', 'bloating'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Constipation' },
-    emergency: { en: 'Seek care if you have severe abdominal pain, vomiting, or haven\'t passed gas/stool in several days.' },
-    whatIsIt: { en: 'Difficulty pooping, leading to severe bloating and discomfort.' },
-    lifestyle: { en: ['<strong>Eat More Fiber:</strong> Fruits, veggies, and whole grains.', '<strong>Drink More Water:</strong> Fiber needs water to work properly.'] }
-  },
-  {
-    id: 'hemorrhoids',
-    keywords: ['hemorrhoids', 'piles', 'bleeding'],
-    category: { en: 'Stomach & Digestion' },
-    title: { en: 'Hemorrhoids' },
-    emergency: { en: 'See a doctor if you experience large amounts of bleeding or severe, continuous pain.' },
-    whatIsIt: { en: 'Swollen, painful veins down below that can bleed during bowel movements.' },
-    lifestyle: { en: ['<strong>Don\'t Strain:</strong> Avoid pushing hard on the toilet.', '<strong>Warm Baths:</strong> Soaking in a warm bath relieves pain and swelling.'] }
-  },
-
-  // --- 🦠 Common Infections & Skin ---
-  {
-    id: 'strep',
-    keywords: ['strep throat', 'sore throat', 'bacterial'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Strep Throat' },
-    emergency: { en: 'Seek immediate care if you have severe difficulty breathing or swallowing.' },
-    whatIsIt: { en: 'Severe bacterial throat infection that needs antibiotics.' },
-    lifestyle: { en: ['<strong>See a Doctor:</strong> Requires a prescription to prevent heart/kidney complications.', '<strong>Change Your Toothbrush:</strong> Do this after you start antibiotics so you don\'t re-infect yourself.'] }
-  },
-  {
-    id: 'pink_eye',
-    keywords: ['pink eye', 'conjunctivitis', 'red eye'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Pink Eye (Conjunctivitis)' },
-    emergency: { en: 'See a doctor if you experience intense eye pain, severe blurry vision, or extreme light sensitivity.' },
-    whatIsIt: { en: 'Highly contagious, itchy, red eye infection.' },
-    lifestyle: { en: ['<strong>Wash Hands Frequently:</strong> Do not touch your face or rub your eyes.', '<strong>Use Warm Compresses:</strong> Helps clean the crust off your eyelashes.'] }
-  },
-  {
-    id: 'cellulitis',
-    keywords: ['cellulitis', 'skin infection', 'red skin'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Cellulitis' },
-    emergency: { en: 'Go to the ER if the red area spreads rapidly, or if you develop a high fever and chills.' },
-    whatIsIt: { en: 'A deep, spreading skin infection that feels hot and red.' },
-    lifestyle: { en: ['<strong>Seek Medical Treatment:</strong> You will likely need antibiotics.', '<strong>Keep the Area Clean and Elevated:</strong> Helps reduce swelling.'] }
-  },
-  {
-    id: 'eczema',
-    keywords: ['eczema', 'dry skin', 'itchy'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Eczema' },
-    emergency: { en: 'See a doctor if the skin starts oozing yellow pus, which means it\'s infected.' },
-    whatIsIt: { en: 'Very dry, itchy skin patches that crack and bleed.' },
-    lifestyle: { en: ['<strong>Moisturize Constantly:</strong> Use thick, unscented creams right after a shower.', '<strong>Avoid Hot Showers:</strong> Hot water strips oil from your skin.'] }
-  },
-  {
-    id: 'shingles',
-    keywords: ['shingles', 'rash', 'chickenpox'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Shingles' },
-    emergency: { en: 'Seek urgent care if the rash is anywhere near your eyes, as it can cause blindness.' },
-    whatIsIt: { en: 'A painful, blistering rash caused by an old chickenpox virus.' },
-    lifestyle: { en: ['<strong>See a Doctor Quickly:</strong> Medication works best if started within 72 hours.', '<strong>Keep the Rash Covered:</strong> So you don\'t spread the virus to others.'] }
-  },
-  {
-    id: 'fungal',
-    keywords: ['fungal infection', 'ringworm', 'athletes foot'],
-    category: { en: 'Common Infections & Skin' },
-    title: { en: 'Fungal Infections (Ringworm/Athlete\'s Foot)' },
-    emergency: { en: 'See a doctor if it doesn\'t improve with over-the-counter creams or if it gets severely red and hot.' },
-    whatIsIt: { en: 'Itchy, scaly skin circles or cracked skin between toes.' },
-    lifestyle: { en: ['<strong>Keep the Area Dry:</strong> Fungus loves dark, damp places.', '<strong>Don\'t Share Towels:</strong> Fungal infections are highly contagious.'] }
-  },
-
-  // --- 🚨 Everyday Emergencies & Injuries ---
-  {
-    id: 'dehydration',
-    keywords: ['dehydration', 'thirsty', 'fainting'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Dehydration' },
-    emergency: { en: 'Go to the ER if you feel extremely dizzy when standing, are confused, or stop urinating completely.' },
-    whatIsIt: { en: 'Dangerous lack of water causing dizziness or passing out.' },
-    lifestyle: { en: ['<strong>Sip Water/Electrolytes:</strong> Drink slowly so you don\'t upset your stomach.', '<strong>Rest in a Cool Place:</strong> Avoid the sun and heat.'] }
-  },
-  {
-    id: 'burns',
-    keywords: ['severe burns', 'burn', 'fire'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Severe Burns' },
-    emergency: { en: 'Go to the ER for burns that cover a large area, look white/charred, or are on the face, hands, or genitals.' },
-    whatIsIt: { en: 'Skin damage from fire, hot water, or cooking oil.' },
-    lifestyle: { en: ['<strong>Run Cool Water:</strong> Hold the burn under cool (not ice cold) water for 10-15 mins.', '<strong>Do Not Pop Blisters:</strong> Blisters protect the healing skin underneath.'] }
-  },
-  {
-    id: 'anaphylaxis',
-    keywords: ['allergic reaction', 'anaphylaxis', 'hives'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Allergic Reactions (Anaphylaxis)' },
-    emergency: { en: 'CALL 911 IMMEDIATELY if you have trouble breathing, swelling of the lips/tongue, or throat closing.' },
-    whatIsIt: { en: 'Throat closing or hives from food, bugs, or medication.' },
-    lifestyle: { en: ['<strong>Use an EpiPen:</strong> If you have one, use it immediately and still call 911.'] }
-  },
-  {
-    id: 'heat_stroke',
-    keywords: ['heat stroke', 'overheating', 'sun'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Heat Stroke' },
-    emergency: { en: 'CALL 911 if the person stops sweating, becomes confused, or passes out in extreme heat.' },
-    whatIsIt: { en: 'Body overheating dangerously under the hot sun.' },
-    lifestyle: { en: ['<strong>Cool Down Fast:</strong> Move to shade/AC and apply cold, wet cloths to the neck and armpits.'] }
-  },
-  {
-    id: 'bites',
-    keywords: ['animal bite', 'insect bite', 'dog bite'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Animal or Insect Bites' },
-    emergency: { en: 'Go to the ER if a dog/wild animal bites through the skin, or if a bite gets severely red, swollen, or streaks up your arm/leg.' },
-    whatIsIt: { en: 'Infected wounds from dogs, cats, ticks, or spiders.' },
-    lifestyle: { en: ['<strong>Wash with Soap and Water:</strong> Clean the wound thoroughly right away.', '<strong>Watch for Infection:</strong> Monitor for redness, heat, or pus.'] }
-  },
-  {
-    id: 'appendicitis',
-    keywords: ['appendicitis', 'appendix', 'belly pain'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Appendicitis' },
-    emergency: { en: 'GO TO THE ER IMMEDIATELY. This requires urgent surgery.' },
-    whatIsIt: { en: 'Bursting internal organ causing severe bottom-right belly pain.' },
-    lifestyle: { en: ['<strong>Do Not Eat or Drink:</strong> If you suspect appendicitis, keep your stomach empty in case you need emergency surgery.'] }
-  },
-  {
-    id: 'food_allergy',
-    keywords: ['food allergy', 'peanuts', 'shellfish'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Food Allergies' },
-    emergency: { en: 'Call 911 for throat tightness, lip swelling, or difficulty breathing (Anaphylaxis).' },
-    whatIsIt: { en: 'Dangerous body reactions to foods like peanuts, dairy, or shellfish.' },
-    lifestyle: { en: ['<strong>Read Labels:</strong> Always check ingredients.', '<strong>Carry Medication:</strong> Keep Benadryl or an EpiPen with you at all times.'] }
-  },
-  {
-    id: 'poison_ivy',
-    keywords: ['poison ivy', 'poison oak', 'rash'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Poison Ivy / Oak' },
-    emergency: { en: 'Seek care if the rash spreads to your face, genitals, or if you breathe in smoke from burning poison ivy.' },
-    whatIsIt: { en: 'Severe, blistering rash from touching wild plants.' },
-    lifestyle: { en: ['<strong>Wash with Dish Soap:</strong> Wash the skin immediately with a grease-cutting soap to remove plant oils.', '<strong>Wash Clothes:</strong> The oil can stay on clothing and shoes for months.'] }
-  },
-  {
-    id: 'lyme_disease',
-    keywords: ['lyme disease', 'tick', 'bullseye'],
-    category: { en: 'Everyday Emergencies & Injuries' },
-    title: { en: 'Lyme Disease' },
-    emergency: { en: 'See a doctor immediately if you develop a "bullseye" shaped rash, fever, or severe joint pain after a tick bite.' },
-    whatIsIt: { en: 'A serious bacterial infection passed by tiny ticks.' },
-    lifestyle: { en: ['<strong>Remove Ticks Quickly:</strong> Use tweezers to grab the tick close to the skin and pull straight up.', '<strong>Check Your Body:</strong> After walking in tall grass or woods.'] }
+    keywords: ['stroke', 'brain attack', 'derrame cerebral', '中风', 'ስትሮክ', 'đột quỵ'],
+    category: { en: 'Heart, Blood, & Circulation', es: 'Corazón, Sangre y Circulación', zh: '心脏、血液与循环', am: 'ልብ፣ ደም እና የደም ዝውውር', vi: 'Tim, Máu & Tuần Hoàn' },
+    title: { en: 'Stroke', es: 'Derrame Cerebral', zh: '中风', am: 'ስትሮክ (Stroke)', vi: 'Đột Quỵ' },
+    emergency: { 
+      en: 'CALL 911 IMMEDIATELY. Remember FAST: Face drooping, Arm weakness, Speech difficulty, Time to call 911.',
+      es: 'LLAME AL 911 DE INMEDIATO. Observe si hay cara caída, debilidad en un brazo o dificultad para hablar.',
+      zh: '立即拨打急救电话。注意FAST原则：面部歪斜、手臂无力、言语不清、立即求救！',
+      am: 'ወዲያውኑ ወደ ህክምና ይደውሉ፦ የፊት መዛባት፣ የእጅ መዝለል ወይም የመናገር ችግር ካዩ::',
+      vi: 'GỌI CẤP CỨU NGAY if bị méo miệng, yếu tay hoặc khó nói.'
+    },
+    whatIsIt: { 
+      en: 'A blocked or burst tube stopping blood in the brain.',
+      es: 'Una arteria bloqueada o rota que interrumpe la sangre al cerebro.',
+      zh: '大脑血管堵塞或破裂，导致脑部供血中断。',
+      am: 'በአንጎል ውስጥ የደም ሥር መዘጋት ወይም መፈንዳት ሲከሰት የሚፈጠር ነው።',
+      vi: 'Mạch máu não bị tắc hoặc vỡ làm gián đoạn máu nuôi脑.'
+    },
+    lifestyle: { 
+      en: ['<strong>Act Fast:</strong> Time is critical to saving brain function.'],
+      es: ['<strong>Actúe rápido:</strong> Cada minuto cuenta.'],
+      zh: ['<strong>快速行动：</strong> 争取抢救金黄金时间。'],
+      am: ['<strong>በፍጥነት ይንቀሳቀሱ፦</strong> ጊዜ የአንጎልን ህዋሳት ለማዳን ወሳኝ ነው::'],
+      vi: ['<strong>Hành động nhanh:</strong> Thời gian là vàng để cứu não.']
+    }
   }
 ];
 
-// --- Search and UI Logic Below ---
-
-// Pure JS Search Function
+// Search & Rendering Logic
 function runSearch() {
   const queryInput = document.getElementById('search-input');
   if (!queryInput) return;
@@ -524,7 +228,6 @@ function runSearch() {
   
   if (!query) return;
 
-  // Search through IDs, keywords, and localized titles
   const matched = medicalDatabase.find(item => {
     const inId = item.id.toLowerCase().includes(query);
     const inKeywords = item.keywords.some(k => k.toLowerCase().includes(query));
@@ -536,52 +239,39 @@ function runSearch() {
     activeConditionId = matched.id;
     renderCard();
   } else {
-    // Show clean, cute empty state without unneeded extra labels
     card.style.display = 'block';
     
     const badge = document.getElementById('res-badge');
-    if (badge) badge.innerText = '✨ Stay Healthy';
+    if (badge) badge.innerText = '✨ ClearHealth';
     
     const title = document.getElementById('res-title');
-    if (title) title.innerText = 'Condition Not Found 🌸';
+    if (title) title.innerText = 'Condition Not Found';
     
-    // Hide extra section headers when not found
-    const whatLabel = document.getElementById('res-what-label');
-    if (whatLabel) whatLabel.style.display = 'none';
-    
-    const lifestyleLabel = document.getElementById('res-lifestyle-label');
-    if (lifestyleLabel) lifestyleLabel.style.display = 'none';
+    document.getElementById('res-what-label').style.display = 'none';
+    document.getElementById('res-lifestyle-label').style.display = 'none';
     
     const whatText = document.getElementById('res-what-text');
     if (whatText) {
-      whatText.innerText = `We don't have an entry for "${query}" in our database yet! Try searching for terms like Heart Attack, Asthma, Migraine, or Arthritis.`;
+      whatText.innerText = `We don't have an entry for "${query}" yet! Try searching for terms like Diabetes, Asthma, Migraine, or Heart Attack.`;
     }
     
-    const actionGrid = document.getElementById('res-action-grid');
-    if (actionGrid) actionGrid.innerHTML = '';
-    
-    const emergencyBox = document.getElementById('emergency-box');
-    if (emergencyBox) emergencyBox.style.display = 'none';
+    document.getElementById('res-action-grid').innerHTML = '';
+    document.getElementById('emergency-box').style.display = 'none';
   }
 }
 
-// Category Filter Chip Logic
 function filterByCategory(categoryKey, element) {
   const chips = document.querySelectorAll('.chip-btn');
   chips.forEach(chip => chip.classList.remove('active'));
-  if (element) {
-    element.classList.add('active');
-  }
+  if (element) element.classList.add('active');
 
   if (categoryKey === 'all') {
-    const card = document.getElementById('results-card');
-    if (card) card.style.display = 'none';
+    document.getElementById('results-card').style.display = 'none';
     activeConditionId = '';
     return;
   }
 
   const match = medicalDatabase.find(item => {
-    // Search the English category name to match the HTML buttons
     return item.category.en.toLowerCase().includes(categoryKey.toLowerCase());
   });
 
@@ -589,94 +279,202 @@ function filterByCategory(categoryKey, element) {
     activeConditionId = match.id;
     renderCard();
   } else {
-    const card = document.getElementById('results-card');
-    if (card) card.style.display = 'none';
+    document.getElementById('results-card').style.display = 'none';
   }
-}
-
-function quickSearch(conditionId) {
-  activeConditionId = conditionId;
-  renderCard();
 }
 
 function changeLanguage() {
   const langSelect = document.getElementById('lang-select');
   if (langSelect) currentLang = langSelect.value;
   updateUIText();
-  if (activeConditionId) {
-    renderCard();
-  }
+  if (activeConditionId) renderCard();
 }
 
 function updateUIText() {
   const langData = uiTranslations[currentLang] || uiTranslations.en;
   
-  const title = document.getElementById('search-title');
-  if (title) title.innerText = langData.title;
-  
-  const subtitle = document.getElementById('search-subtitle');
-  if (subtitle) subtitle.innerText = langData.subtitle;
-  
-  const searchInput = document.getElementById('search-input');
-  if (searchInput) searchInput.placeholder = langData.placeholder;
-  
-  const searchBtn = document.getElementById('search-btn');
-  if (searchBtn) searchBtn.innerText = langData.button;
-  
-  const whatLabel = document.getElementById('res-what-label');
-  if (whatLabel) whatLabel.innerText = langData.whatLabel;
-  
-  const lifestyleLabel = document.getElementById('res-lifestyle-label');
-  if (lifestyleLabel) lifestyleLabel.innerText = langData.lifestyleLabel;
-  
-  const emergencyLabel = document.getElementById('res-emergency-label');
-  if (emergencyLabel) emergencyLabel.innerText = langData.emergencyLabel;
+  document.getElementById('search-title').innerText = langData.title;
+  document.getElementById('search-subtitle').innerText = langData.subtitle;
+  document.getElementById('search-input').placeholder = langData.placeholder;
+  document.getElementById('search-btn').innerText = langData.button;
+  document.getElementById('res-what-label').innerText = langData.whatLabel;
+  document.getElementById('res-lifestyle-label').innerText = langData.lifestyleLabel;
+  document.getElementById('res-emergency-label').innerText = langData.emergencyLabel;
 }
 
 function renderCard() {
   const condition = medicalDatabase.find(item => item.id === activeConditionId);
   if (!condition) return;
 
-  // Make sure labels are visible for found conditions
-  const whatLabel = document.getElementById('res-what-label');
-  if (whatLabel) whatLabel.style.display = 'block';
-  
-  const lifestyleLabel = document.getElementById('res-lifestyle-label');
-  if (lifestyleLabel) lifestyleLabel.style.display = 'block';
+  document.getElementById('res-what-label').style.display = 'block';
+  document.getElementById('res-lifestyle-label').style.display = 'block';
 
-  // Smart fallback: If translation is missing, fallback to English
-  const badge = document.getElementById('res-badge');
-  if (badge) badge.innerText = condition.category[currentLang] || condition.category.en;
-  
-  const title = document.getElementById('res-title');
-  if (title) title.innerText = condition.title[currentLang] || condition.title.en;
-  
-  const whatText = document.getElementById('res-what-text');
-  if (whatText) whatText.innerText = condition.whatIsIt[currentLang] || condition.whatIsIt.en;
+  document.getElementById('res-badge').innerText = condition.category[currentLang] || condition.category.en;
+  document.getElementById('res-title').innerText = condition.title[currentLang] || condition.title.en;
+  document.getElementById('res-what-text').innerText = condition.whatIsIt[currentLang] || condition.whatIsIt.en;
 
-  // Emergency Box
   const emergencyBox = document.getElementById('emergency-box');
   const emergencyText = document.getElementById('res-emergency-text');
-  if (condition.emergency && emergencyBox && emergencyText) {
+  if (condition.emergency) {
     emergencyText.innerText = condition.emergency[currentLang] || condition.emergency.en;
     emergencyBox.style.display = 'flex';
-  } else if (emergencyBox) {
+  } else {
     emergencyBox.style.display = 'none';
   }
 
-  // Lifestyle Tips Grid
   const actionGrid = document.getElementById('res-action-grid');
-  if (actionGrid) {
-    actionGrid.innerHTML = '';
-    const items = condition.lifestyle[currentLang] || condition.lifestyle.en;
-    items.forEach(text => {
-      const div = document.createElement('div');
-      div.className = 'action-item';
-      div.innerHTML = text;
-      actionGrid.appendChild(div);
-    });
-  }
+  actionGrid.innerHTML = '';
+  const items = condition.lifestyle[currentLang] || condition.lifestyle.en;
+  items.forEach(text => {
+    const div = document.createElement('div');
+    div.className = 'action-item';
+    div.innerHTML = text;
+    actionGrid.appendChild(div);
+  });
 
-  const card = document.getElementById('results-card');
-  if (card) card.style.display = 'block';
+  document.getElementById('results-card').style.display = 'block';
 }
+// Append these entries into your medicalDatabase array:
+
+  // --- 🫁 Lungs & Breathing ---
+  {
+    id: 'asthma',
+    keywords: ['asthma', 'breathing', 'asma', '哮喘', 'አስሞች', 'hen suyễn'],
+    category: { en: 'Lungs & Breathing', es: 'Pulmones y Respiración', zh: '肺部与呼吸', am: 'ሳንባ እና መተንፈስ', vi: 'Phổi & Hô Hấp' },
+    title: { en: 'Asthma', es: 'Asma', zh: '哮喘', am: 'አስማ (Asthma)', vi: 'Bệnh Hen Suyễn' },
+    emergency: { 
+      en: 'Go to the ER if your rescue inhaler isn\'t working or you can\'t speak in full sentences.',
+      es: 'Vaya a urgencias si su inhalador no funciona o no puede hablar con oraciones completas.',
+      zh: '如果急救吸入器无效或无法完整说话，请立即就医。',
+      am: 'የአስማ ማስታገሻ መድሃኒቱ ካልሰራ ወይም ሙሉ አረፍተ ነገር መናገር ካልቻሉ ወዲያውኑ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi cấp cứu ngay nếu thuốc xịt không có tác dụng hoặc không thể nói tròn câu.'
+    },
+    whatIsIt: { 
+      en: 'Swollen breathing tubes that squeeze shut.',
+      es: 'Vías respiratorias inflamadas que se estrechan y dificultan la respiración.',
+      zh: '呼吸道发炎肿胀并收缩变窄。',
+      am: 'የመተንፈሻ ቱቦዎች ያበጡ እና ጠበብ የሚሉበት ሁኔታ ነው።',
+      vi: 'Đường thở bị sưng viêm và co thắt lại.'
+    },
+    lifestyle: { 
+      en: ['<strong>Avoid Triggers:</strong> Keep away from smoke and dust.', '<strong>Keep Inhaler Close:</strong> Always carry your rescue inhaler.'],
+      es: ['<strong>Evite desencadenantes:</strong> Aléjese del humo y polvo.', '<strong>Lleve su inhalador:</strong> Téngalo siempre a mano.'],
+      zh: ['<strong>远离诱因：</strong> 避开烟雾和灰尘。', '<strong>随身携带吸入器：</strong> 确保随时可用。'],
+      am: ['<strong>ቀስቃሽ ነገሮችን ያስወግዱ፦</strong> ከጢስ እና ከአቧራ ይራቁ።', '<strong>መድሃኒትዎን ይያዙ፦</strong> ሁልጊዜ አስማ ማስታገሻዎን አጠገብዎ ያድርጉ።'],
+      vi: ['<strong>Tránh chất kích thích:</strong> Tránh xa khói thuốc và bụi bẩn.', '<strong>Luôn mang theo thuốc xịt:</strong> Để sẵn sàng khi cần.']
+    }
+  },
+  {
+    id: 'flu',
+    keywords: ['flu', 'influenza', 'gripe', '流感', 'ጉንፋን', 'cúm'],
+    category: { en: 'Lungs & Breathing', es: 'Pulmones y Respiración', zh: '肺部与呼吸', am: 'ሳንባ እና መተንፈስ', vi: 'Phổi & Hô Hấp' },
+    title: { en: 'The Flu (Influenza)', es: 'Gripe (Influenza)', zh: '流行性感冒（流感）', am: 'የባድ ጉንፋን (Flu)', vi: 'Cúm Mùa' },
+    emergency: { 
+      en: 'Seek care for severe chest pain, trouble breathing, or high fever that won\'t break.',
+      es: 'Busque atención si tiene dolor de pecho grave, dificultad para respirar o fiebre muy alta.',
+      zh: '如果经常胸痛、呼吸困难或高烧不退，请及时就医。',
+      am: 'ከባድ የደረት ህመም፣ የመተንፈስ እጥረት ወይም የማይወርድ ከፍተኛ ትኩሳት ካለ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi khám ngay if bị đau ngực severe, khó thở hoặc sốt cao không hạ.'
+    },
+    whatIsIt: { 
+      en: 'A severe viral infection of the nose, throat, and lungs.',
+      es: 'Una infección viral grave del sistema respiratorio.',
+      zh: '由病毒引起的鼻、咽喉和肺部急性感染。',
+      am: 'በቫይረስ ምክንያት የሚመጣ የአፍንጫ፣ የጉሮሮ እና የሳንባ ህመም ነው።',
+      vi: 'Bệnh nhiễm trùng đường hô hấp do vi-rút gây ra.'
+    },
+    lifestyle: { 
+      en: ['<strong>Rest Completely:</strong> Stay home and sleep to recover.', '<strong>Hydrate:</strong> Drink water and warm fluids.'],
+      es: ['<strong>Descanse:</strong> Quédese en casa y duerma.', '<strong>Hidrátese:</strong> Tome agua y líquidos calientes.'],
+      zh: ['<strong>充分休息：</strong> 居家休息以利恢复。', '<strong>补充水分：</strong> 多喝水和温汤。'],
+      am: ['<strong>እረፍት ያድርጉ፦</strong>ቤት ውስጥ ሆነው ያረፉ።', '<strong>ፈሳሽ ይውሰዱ፦</strong> ውሃ እና ሞቅ ያሉ ነገሮችን ይጠጡ።'],
+      vi: ['<strong>Nghỉ ngơi hoàn toàn:</strong> Ở nhà và ngủ đủ giấc.', '<strong>Uống đủ nước:</strong> Bổ sung nước và nước ấm.']
+    }
+  },
+
+  // --- 🧠 Brain & Mental Health ---
+  {
+    id: 'migraine',
+    keywords: ['migraine', 'headache', 'migraña', '偏头痛', 'ራስ ምታት', 'đau nửa đầu'],
+    category: { en: 'Brain & Mental Health', es: 'Cerebro y Salud Mental', zh: '大脑与心理健康', am: 'አንጎል እና አእምሮ ጤና', vi: 'Bộ Não & Tâm Thần' },
+    title: { en: 'Migraine', es: 'Migraña', zh: '偏头痛', am: 'ሚግራይን (Migraine)', vi: 'Đau Nửa Đầu (Migraine)' },
+    emergency: { 
+      en: 'Seek immediate care if it is the worst headache of your life or comes on like a sudden thunderclap.',
+      es: 'Busque atención inmediata si es el peor dolor de cabeza de su vida o aparece de golpe.',
+      zh: '如果是人生中最剧烈的头痛或突然发作的霹雳样头痛，请立即就医。',
+      am: 'በህይወትዎ አጋጥሞዎት የማያውቅ ከባድ ራስ ምታት ከሆነ ወዲያውኑ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi cấp cứu ngay nếu đây là cơn đau đầu dữ dội nhất từng gặp.'
+    },
+    whatIsIt: { 
+      en: 'Severe, pulsing headaches often causing nausea and sensitivity to light.',
+      es: 'Dolores de cabeza intensos con pulsaciones, náuseas y sensibilidad a la luz.',
+      zh: '剧烈的搏动性头痛，常伴有恶心及对光线敏感。',
+      am: 'ከባድ፣ የሚወጋ ራስ ምታት ሲሆን ማስታወክ እና የብርሃን ጥላቻን ያስከተላል።',
+      vi: 'Cơn đau đầu dữ dội dồn dập, thường gây nôn y sợ ánh sáng.'
+    },
+    lifestyle: { 
+      en: ['<strong>Rest in a Dark Room:</strong> Turn off all lights and screens.', '<strong>Apply Cold Compress:</strong> Put an ice pack on your forehead.'],
+      es: ['<strong>Descansar a oscuras:</strong> Apague luces y pantallas.', '<strong>Compresa fría:</strong> Ponga hielo en la frente.'],
+      zh: ['<strong>在黑暗处休息：</strong> 关闭灯光和电子屏幕。', '<strong>冷敷：</strong> 额头敷冰袋。'],
+      am: ['<strong>ጨለማ ክፍል ውስጥ ያረፉ፦</strong> መብራት እና ስክሪኖችን ያጥፉ።', '<strong>ቀዝቃዛ ጨርቅ ማድረግ፦</strong> በግንባርዎ ላይ ቀዝቃዛ ነገር ያድርጉ።'],
+      vi: ['<strong>Nghỉ trong phòng tối:</strong> Tắt hết đèn và thiết bị điện tử.', '<strong>Chườm lạnh:</strong> Đặt túi băng lên trán.']
+    }
+  },
+
+  // --- 💧 Urinary, Kidney, & Blood Sugar ---
+  {
+    id: 'diabetes',
+    keywords: ['diabetes', 'sugar', 'diabetes', '糖尿病', 'ስኳር በሽታ', 'tiểu đường'],
+    category: { en: 'Urinary, Kidney, & Blood Sugar', es: 'Sistemas Urinario y Azúcar', zh: '泌尿、肾脏与血糖', am: 'የሽንት፣ ኩላሊት እና ስኳር', vi: 'Thận & Đường Huyết' },
+    title: { en: 'Diabetes (Type 2)', es: 'Diabetes Tipo 2', zh: '2型糖尿病', am: 'የስኳር በሽታ (Type 2)', vi: 'Tiểu Đường Tuýp 2' },
+    emergency: { 
+      en: 'Seek immediate care for extreme confusion, fruity-smelling breath, or fainting.',
+      es: 'Busque ayuda inmediata si hay confusión extrema, aliento con olor a frutas o desmayo.',
+      zh: '出现极度混乱、呼出气体有水果味或晕厥时，请立即就医。',
+      am: 'ከፍተኛ ግራ መጋባት፣ የፍራፍሬ ሽታ ያለው እስትንፋስ ወይም ራስን መሳት ካለ ወዲያውኑ ወደ ህክምና ይሂዱ።',
+      vi: 'Đi cấp cứu ngay if bị mơ hồ severe, hơi thở có mùi trái cây hoặc ngất xỉu.'
+    },
+    whatIsIt: { 
+      en: 'The body cannot process sugar properly, leading to elevated blood sugar levels.',
+      es: 'El cuerpo no procesa el azúcar correctamente, elevando sus niveles en sangre.',
+      zh: '身体无法正常利用糖分，导致血糖水平过高。',
+      am: 'ሰውነት ስኳርን በአግባቡ መጠቀም ስለማይችል በደም ውስጥ ያለው የስኳር መጠን ይጨምራል።',
+      vi: 'Cơ thể không chuyển hóa đường hiệu quả, làm tăng đường huyết.'
+    },
+    lifestyle: { 
+      en: ['<strong>Cut Sugary Drinks:</strong> Switch from soda to plain water.', '<strong>Walk After Meals:</strong> Helps muscles use up blood sugar.'],
+      es: ['<strong>Corte bebidas azucaradas:</strong> Tome agua en vez de refrescos.', '<strong>Camine tras comer:</strong> Ayuda a procesar el azúcar.'],
+      zh: ['<strong>戒除含糖饮料：</strong> 用白开水替代汽水和饮料。', '<strong>饭后散步：</strong> 帮助肌肉消耗血糖。'],
+      am: ['<strong>የስኳር መጠጦችን መቀነስ፦</strong> ለስላሳዎችን በውሃ ይተኩ።', '<strong>ከምግብ በኋላ መንገድ መራመድ፦</strong> የስኳር መጠንን ለመቀነስ ይረዳል።'],
+      vi: ['<strong>Bỏ đồ uống có đường:</strong> Thay nước ngọt bằng nước lọc.', '<strong>Đi bộ sau bữa ăn:</strong> Giúp cơ thể tiêu thụ đường.']
+    }
+  },
+
+  // --- 🚨 Everyday Emergencies & Injuries ---
+  {
+    id: 'appendicitis',
+    keywords: ['appendicitis', 'appendix', 'apendicitis', '阑尾炎', 'ትርፍ አንጀት', 'viêm ruột thừa'],
+    category: { en: 'Everyday Emergencies & Injuries', es: 'Emergencias Diarias', zh: '日常急救与外伤', am: 'ድንገተኛ አደጋዎች', vi: 'Cấp Cứu Hàng Ngày' },
+    title: { en: 'Appendicitis', es: 'Apendicitis', zh: '急性阑尾炎', am: 'የትርፍ አንጀት ህመም', vi: 'Viêm Ruột Thừa' },
+    emergency: { 
+      en: 'GO TO THE ER IMMEDIATELY. Appendicitis requires urgent emergency evaluation and surgery.',
+      es: 'VAYA A URGENCIAS DE INMEDIATO. Requiere evaluación médica y cirugía urgente.',
+      zh: '请立即前往急诊室！阑尾炎需要紧急医疗评估和手术治疗。',
+      am: 'ወዲያውኑ ወደ ድንገተኛ ህክምና ክፍል ይሂዱ! የቀዶ ጥገና ህክምና ያስፈልገዋል::',
+      vi: 'ĐẾN PHÒNG CẤP CỨU NGAY LẬP TỨC. Cần phẫu thuật khẩn cấp.'
+    },
+    whatIsIt: { 
+      en: 'Infection of the appendix causing severe, worsening bottom-right belly pain.',
+      es: 'Infección del apéndice que causa dolor intenso en el lado inferior derecho del abdomen.',
+      zh: '阑尾发炎引起右下腹剧烈并持续加重的疼痛。',
+      am: 'በትርፍ አንጀት ላይ የሚከሰት ኢንፌክሽን ሲሆን በታችኛው ቀኝ የሆድ ክፍል ላይ ከባድ ህመም ያስከትላል።',
+      vi: 'Viêm ruột thừa gây đau dữ dội ở vùng bụng dưới bên phải.'
+    },
+    lifestyle: { 
+      en: ['<strong>Do Not Eat or Drink:</strong> Keep stomach empty for potential emergency surgery.', '<strong>Do Not Apply Heat:</strong> Heat can cause the appendix to burst.'],
+      es: ['<strong>No coma ni beba nada:</strong> Mantenga el estómago vacío por si requiere cirugía.', '<strong>No aplique calor:</strong> Puede romper el apéndice.'],
+      zh: ['<strong>禁食禁水：</strong> 保持空腹以便随时进行紧急手术。', '<strong>切勿热敷：</strong> 热敷可能导致阑尾穿孔破裂。'],
+      am: ['<strong>ምግብ ወይም ውሃ አይውሰዱ፦</strong> ለድንገተኛ ቀዶ ጥገና ሆድዎን ባዶ ያድርጉ።', '<strong>ሞቅ ያለ ነገር አያድርጉ፦</strong> ትርፍ አንጀቱ እንዲፈነዳ ሊያደርግ ይችላል::'],
+      vi: ['<strong>Không ăn uống gì:</strong> Nhịn ăn để chuẩn bị cho phẫu thuật.', '<strong>Không chườm nóng:</strong> Có thể làm vỡ ruột thừa.']
+    }
+  }
