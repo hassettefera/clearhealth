@@ -16,11 +16,11 @@
     </div>
     <div class="nav-controls">
       <select id="lang-select" onchange="changeLanguage()">
-        <option value="en">🇺🇸English</option>
-        <option value="es">🇪🇸Español</option>
-        <option value="zh">🇨🇳中文</option>
-        <option value="am">🇪🇹አማርኛ</option>
-        <option value="vi">🇻🇳Tiếng Việt</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="zh">中文</option>
+        <option value="am">አማርኛ</option>
+        <option value="vi">Tiếng Việt</option>
       </select>
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙</button>
     </div>
@@ -42,11 +42,14 @@
 
       <div class="category-chips">
         <button class="chip-btn active" onclick="filterByCategory('all', this)">All Topics</button>
-        <button class="chip-btn" onclick="filterByCategory('Heart', this)">Heart & Blood</button>
-        <button class="chip-btn" onclick="filterByCategory('Lungs', this)">Lungs & Breathing</button>
-        <button class="chip-btn" onclick="filterByCategory('Joint', this)">Joint Pain</button>
-        <button class="chip-btn" onclick="filterByCategory('Kidney', this)">Kidney & Urinary</button>
-        <button class="chip-btn" onclick="filterByCategory('Stomach', this)">Stomach & Digestion</button>
+        <button class="chip-btn" onclick="filterByCategory('Heart', this)">🫀 Heart & Blood</button>
+        <button class="chip-btn" onclick="filterByCategory('Lungs', this)">🫁 Lungs & Breathing</button>
+        <button class="chip-btn" onclick="filterByCategory('Brain', this)">🧠 Brain & Mental</button>
+        <button class="chip-btn" onclick="filterByCategory('Joints', this)">🪓 Joints & Bones</button>
+        <button class="chip-btn" onclick="filterByCategory('Urinary', this)">💧 Kidney & Urinary</button>
+        <button class="chip-btn" onclick="filterByCategory('Stomach', this)">🪵 Stomach & Digestion</button>
+        <button class="chip-btn" onclick="filterByCategory('Infections', this)">🦠 Infections & Skin</button>
+        <button class="chip-btn" onclick="filterByCategory('Emergencies', this)">🚨 Emergencies & Injuries</button>
       </div>
     </section>
 
