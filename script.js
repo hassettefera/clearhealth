@@ -79,7 +79,7 @@ const uiTranslations = {
   }
 };
 
-// Full Medical Database
+// Full Medical Database (15 Conditions)
 const medicalDatabase = [
   {
     id: 'blood_pressure',
@@ -299,7 +299,7 @@ const medicalDatabase = [
   },
   {
     id: 'kidney_stones',
-    keywords: ['kidney stones', 'calculos renales', 'renales', '肾结石', 'የኩላሊት ድንጋይ', 'sỏi thận'],
+    keywords: ['kidney stones', 'calculos renales', 'renales', '肾结石', 'የኩላሊት ድንጋይ', 'sỏi thận', 'stones'],
     category: { en: 'Kidney & Urinary', es: 'Riñones y Orina', zh: '肾脏与排尿', am: 'ሽንት', vi: 'Thận & Tiết Niệu' },
     title: { en: 'Kidney Stones', es: 'Cálculos Renales (Piedras)', zh: '肾结石', am: 'የኩላሊት ድንጋይ', vi: 'Sỏi Thận' },
     emergency: {
@@ -456,7 +456,7 @@ const medicalDatabase = [
       es: ["<strong>Descanse en lo oscuro:</strong> Apague luces y pantallas en cuanto empiece el dolor.", "<strong>Tome agua pronto:</strong> La falta de agua es la causa principal."],
       zh: ["<strong>在暗处休息：</strong> 感觉头痛开始时，立刻关掉灯光和屏幕。", "<strong>及时喝水：</strong> 脱水是引发偏头痛的常见原因。"],
       am: ["<strong>ጨለማ ክፍል ማረፍ፦</strong> ህመሙ ሲጀምር መብራት እና ስልክ ያጥፉ።", "<strong>ውሃ መጠጣት፦</strong> የውሃ እጥረት ለራስ ምታት ዋነኛ ምክንያት ነው።"],
-      vi: ["<strong>Nghỉ ngơi trong phòng tối:</strong> Tắt đèn và màn形 ngay khi đau.", "<strong>Uống nước sớm:</strong> Thiếu nước là nguyên nhân hàng đầu gây đau nửa đầu."]
+      vi: ["<strong>Nghỉ ngơi trong phòng tối:</strong> Tắt đèn và màn hình ngay khi đau.", "<strong>Uống nước sớm:</strong> Thiếu nước là nguyên nhân hàng đầu gây đau nửa đầu."]
     }
   },
   {
@@ -490,7 +490,10 @@ const medicalDatabase = [
 
 // Pure JS Search Function
 function runSearch() {
-  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const queryInput = document.getElementById('search-input');
+  if (!queryInput) return;
+  
+  const query = queryInput.value.toLowerCase().trim();
   const card = document.getElementById('results-card');
   
   if (!query) return;
@@ -509,16 +512,30 @@ function runSearch() {
   } else {
     // Show clean, cute empty state without unneeded extra labels
     card.style.display = 'block';
-    document.getElementById('res-badge').innerText = '✨ Stay Healthy';
-    document.getElementById('res-title').innerText = 'Condition Not Added Yet 🌸';
+    
+    const badge = document.getElementById('res-badge');
+    if (badge) badge.innerText = '✨ Stay Healthy';
+    
+    const title = document.getElementById('res-title');
+    if (title) title.innerText = 'Condition Not Added Yet 🌸';
     
     // Hide extra section headers when not found
-    document.getElementById('res-what-label').style.display = 'none';
-    document.getElementById('res-lifestyle-label').style.display = 'none';
+    const whatLabel = document.getElementById('res-what-label');
+    if (whatLabel) whatLabel.style.display = 'none';
     
-    document.getElementById('res-what-text').innerText = `We don't have entry for "${query}" in our database yet! Try searching for terms like Diabetes, Flu, Gout, or Asthma.`;
-    document.getElementById('res-action-grid').innerHTML = '';
-    document.getElementById('emergency-box').style.display = 'none';
+    const lifestyleLabel = document.getElementById('res-lifestyle-label');
+    if (lifestyleLabel) lifestyleLabel.style.display = 'none';
+    
+    const whatText = document.getElementById('res-what-text');
+    if (whatText) {
+      whatText.innerText = `We don't have an entry for "${query}" in our database yet! Try searching for terms like Diabetes, Flu, Gout, or Asthma.`;
+    }
+    
+    const actionGrid = document.getElementById('res-action-grid');
+    if (actionGrid) actionGrid.innerHTML = '';
+    
+    const emergencyBox = document.getElementById('emergency-box');
+    if (emergencyBox) emergencyBox.style.display = 'none';
   }
 }
 
@@ -531,7 +548,8 @@ function filterByCategory(categoryKey, element) {
   }
 
   if (categoryKey === 'all') {
-    document.getElementById('results-card').style.display = 'none';
+    const card = document.getElementById('results-card');
+    if (card) card.style.display = 'none';
     activeConditionId = '';
     return;
   }
@@ -544,7 +562,8 @@ function filterByCategory(categoryKey, element) {
     activeConditionId = match.id;
     renderCard();
   } else {
-    document.getElementById('results-card').style.display = 'none';
+    const card = document.getElementById('results-card');
+    if (card) card.style.display = 'none';
   }
 }
 
@@ -554,7 +573,8 @@ function quickSearch(conditionId) {
 }
 
 function changeLanguage() {
-  currentLang = document.getElementById('lang-select').value;
+  const langSelect = document.getElementById('lang-select');
+  if (langSelect) currentLang = langSelect.value;
   updateUIText();
   if (activeConditionId) {
     renderCard();
@@ -563,13 +583,27 @@ function changeLanguage() {
 
 function updateUIText() {
   const langData = uiTranslations[currentLang] || uiTranslations.en;
-  document.getElementById('search-title').innerText = langData.title;
-  document.getElementById('search-subtitle').innerText = langData.subtitle;
-  document.getElementById('search-input').placeholder = langData.placeholder;
-  document.getElementById('search-btn').innerText = langData.button;
-  document.getElementById('res-what-label').innerText = langData.whatLabel;
-  document.getElementById('res-lifestyle-label').innerText = langData.lifestyleLabel;
-  document.getElementById('res-emergency-label').innerText = langData.emergencyLabel;
+  
+  const title = document.getElementById('search-title');
+  if (title) title.innerText = langData.title;
+  
+  const subtitle = document.getElementById('search-subtitle');
+  if (subtitle) subtitle.innerText = langData.subtitle;
+  
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) searchInput.placeholder = langData.placeholder;
+  
+  const searchBtn = document.getElementById('search-btn');
+  if (searchBtn) searchBtn.innerText = langData.button;
+  
+  const whatLabel = document.getElementById('res-what-label');
+  if (whatLabel) whatLabel.innerText = langData.whatLabel;
+  
+  const lifestyleLabel = document.getElementById('res-lifestyle-label');
+  if (lifestyleLabel) lifestyleLabel.innerText = langData.lifestyleLabel;
+  
+  const emergencyLabel = document.getElementById('res-emergency-label');
+  if (emergencyLabel) emergencyLabel.innerText = langData.emergencyLabel;
 }
 
 function renderCard() {
@@ -577,32 +611,44 @@ function renderCard() {
   if (!condition) return;
 
   // Make sure labels are visible for found conditions
-  document.getElementById('res-what-label').style.display = 'block';
-  document.getElementById('res-lifestyle-label').style.display = 'block';
+  const whatLabel = document.getElementById('res-what-label');
+  if (whatLabel) whatLabel.style.display = 'block';
+  
+  const lifestyleLabel = document.getElementById('res-lifestyle-label');
+  if (lifestyleLabel) lifestyleLabel.style.display = 'block';
 
-  document.getElementById('res-badge').innerText = condition.category[currentLang] || condition.category.en;
-  document.getElementById('res-title').innerText = condition.title[currentLang] || condition.title.en;
-  document.getElementById('res-what-text').innerText = condition.whatIsIt[currentLang] || condition.whatIsIt.en;
+  const badge = document.getElementById('res-badge');
+  if (badge) badge.innerText = condition.category[currentLang] || condition.category.en;
+  
+  const title = document.getElementById('res-title');
+  if (title) title.innerText = condition.title[currentLang] || condition.title.en;
+  
+  const whatText = document.getElementById('res-what-text');
+  if (whatText) whatText.innerText = condition.whatIsIt[currentLang] || condition.whatIsIt.en;
 
   // Emergency Box
   const emergencyBox = document.getElementById('emergency-box');
-  if (condition.emergency) {
-    document.getElementById('res-emergency-text').innerText = condition.emergency[currentLang] || condition.emergency.en;
+  const emergencyText = document.getElementById('res-emergency-text');
+  if (condition.emergency && emergencyBox && emergencyText) {
+    emergencyText.innerText = condition.emergency[currentLang] || condition.emergency.en;
     emergencyBox.style.display = 'flex';
-  } else {
+  } else if (emergencyBox) {
     emergencyBox.style.display = 'none';
   }
 
   // Lifestyle Tips Grid
   const actionGrid = document.getElementById('res-action-grid');
-  actionGrid.innerHTML = '';
-  const items = condition.lifestyle[currentLang] || condition.lifestyle.en;
-  items.forEach(text => {
-    const div = document.createElement('div');
-    div.className = 'action-item';
-    div.innerHTML = text;
-    actionGrid.appendChild(div);
-  });
+  if (actionGrid) {
+    actionGrid.innerHTML = '';
+    const items = condition.lifestyle[currentLang] || condition.lifestyle.en;
+    items.forEach(text => {
+      const div = document.createElement('div');
+      div.className = 'action-item';
+      div.innerHTML = text;
+      actionGrid.appendChild(div);
+    });
+  }
 
-  document.getElementById('results-card').style.display = 'block';
+  const card = document.getElementById('results-card');
+  if (card) card.style.display = 'block';
 }
