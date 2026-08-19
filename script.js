@@ -740,6 +740,33 @@ const medicalDatabase = [
     }
   }
 ];
+{
+    id: 'gout',
+    keywords: ['gout', 'uric acid', 'toe pain', 'gota', '痛风', 'ሪህ', 'gút'],
+    category: { en: 'Joints & Bones', es: 'Articulaciones y Huesos', zh: '关节与骨骼', am: 'መገጣጠሚያ እና አጥንት', vi: 'Khớp & Xương' },
+    title: { en: 'Gout', es: 'Gota', zh: '痛风', am: 'ሪህ (Gout)', vi: 'Bệnh Gút' },
+    emergency: { 
+      en: 'Seek medical care if a joint is extremely painful, hot, and swollen, especially with a fever.',
+      es: 'Busque atención médica si una articulación está muy dolorosa, caliente e hinchada.',
+      zh: '如果关节极度疼痛、发热和红肿，特别是伴有发烧，请就医。',
+      am: 'መገጣጠሚያዎ በጣም የሚያመው፣ ሞቃት እና ያበጠ ከሆነ፣ በተለይም ከትኩሳት ጋር ከሆነ ህክምና ያግኙ።',
+      vi: 'Đi khám nếu khớp cực kỳ đau, nóng và sưng, đặc biệt là kèm theo sốt.'
+    },
+    whatIsIt: { 
+      en: 'A type of arthritis caused by a buildup of uric acid crystals in the joints, often starting in the big toe.',
+      es: 'Un tipo de artritis causado por la acumulación de cristales de ácido úrico en las articulaciones.',
+      zh: '一种由尿酸结晶在关节积聚引起的关节炎，通常从大脚趾开始。',
+      am: 'በመገጣጠሚያዎች ላይ የዩሪክ አሲድ ክሪስታሎች በመከማቸት የሚመጣ የአርትሪት አይነት ነው።',
+      vi: 'Một dạng viêm khớp do tích tụ tinh thể axit uric trong khớp, thường bắt đầu ở ngón chân cái.'
+    },
+    lifestyle: { 
+      en: ['<strong>Stay Hydrated:</strong> Drink plenty of water to help flush out uric acid.', '<strong>Limit Purine-Rich Foods:</strong> Reduce red meat, shellfish, and alcohol.'],
+      es: ['<strong>Manténgase hidratado:</strong> Beba mucha agua para eliminar el ácido úrico.', '<strong>Limite alimentos ricos en purinas:</strong> Reduzca carnes rojas y alcohol.'],
+      zh: ['<strong>保持水分：</strong> 多喝水以帮助排出尿酸。', '<strong>限制高嘌呤食物：</strong> 减少红肉、贝类和酒精摄入。'],
+      am: ['<strong>ፈሳሽ ይጠጡ፦</strong> ዩሪክ አሲድን ለማስወገድ ብዙ ውሃ ይጠጡ።', '<strong>የተወሰኑ ምግቦችን ይገድቡ፦</strong> ቀይ ሥጋ እና አልኮልን ይቀንሱ።'],
+      vi: ['<strong>Uống đủ nước:</strong> Uống nhiều nước để đào thải axit uric.', '<strong>Hạn chế thực phẩm giàu purin:</strong> Giảm thịt đỏ, hải sản và rượu bia.']
+    }
+  },
 
 // Search & Rendering Logic
 function runSearch() {
