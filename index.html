@@ -3,256 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Information Simplified</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --bg-color: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --alert-bg: #fef2f2;
-      --alert-border: #f87171;
-      --alert-text: #991b1b;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 650px;
-      margin-top: 20px;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 15px;
-    }
-
-    select {
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .hero {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .hero h1 {
-      font-size: 1.8rem;
-      margin-bottom: 8px;
-    }
-
-    .hero p {
-      color: var(--text-muted);
-      margin-top: 0;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .search-box input {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      outline: none;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      transition: border-color 0.2s;
-    }
-
-    .search-box input:focus {
-      border-color: var(--primary);
-    }
-
-    .search-box button {
-      padding: 0 20px;
-      background-color: var(--primary);
-      color: white;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .search-box button:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .chips-container {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-
-    .chip-btn {
-      background: #fff;
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      white-space: nowrap;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-
-    .chip-btn.active, .chip-btn:hover {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      margin-bottom: 20px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #eff6ff;
-      color: var(--primary);
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.4rem;
-    }
-
-    .card-section {
-      margin-top: 16px;
-    }
-
-    .card-section h3 {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      letter-spacing: 0.5px;
-    }
-
-    .emergency-alert {
-      background-color: var(--alert-bg);
-      border-left: 4px solid var(--alert-border);
-      padding: 12px 16px;
-      border-radius: 0 8px 8px 0;
-      margin: 16px 0;
-      color: var(--alert-text);
-      font-size: 0.9rem;
-    }
-
-    .emergency-alert strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .action-grid {
-      display: grid;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .action-item {
-      background: #f8fafc;
-      padding: 10px 14px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
-    }
-  </style>
+  <title>ClearHealth - Medical Information Simplified</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <!-- Cleaned Language Dropdown (no broken reference error) -->
-    <div class="top-bar">
-      <select id="lang-select">
+  <!-- Navigation Bar with Language Dropdown -->
+  <header class="navbar">
+    <div class="logo">✨ ClearHealth</div>
+    <div class="lang-container">
+      <select id="lang-select" onchange="changeLanguage()">
         <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="zh">中文</option>
       </select>
     </div>
+  </header>
 
-    <!-- Hero Title -->
-    <header class="hero">
+  <main>
+    <!-- Hero / Search Section -->
+    <section class="hero">
       <h1>Medical information, simplified.</h1>
       <p>Understand your health in simple, everyday language.</p>
-    </header>
+      
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search a condition (e.g., Diabetes, Anemia, Gout)...">
+        <button id="search-btn">Search</button>
+      </div>
 
-    <!-- Search Input & Button -->
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="Search a condition (e.g., Diabetes, Anemia, Gout)...">
-      <button id="search-btn">Search</button>
-    </div>
+      <!-- Category Filter Chips -->
+      <div class="categories">
+        <button class="chip-btn" onclick="filterByCategory('all', this)">All</button>
+        <button class="chip-btn" onclick="filterByCategory('Heart & Blood', this)">Heart & Blood</button>
+        <button class="chip-btn" onclick="filterByCategory('Joints & Bones', this)">Joints & Bones</button>
+        <button class="chip-btn" onclick="filterByCategory('Kidney & Sugar', this)">Kidney & Sugar</button>
+        <button class="chip-btn" onclick="filterByCategory('Lungs & Breathing', this)">Lungs & Breathing</button>
+        <button class="chip-btn" onclick="filterByCategory('Brain & Mental', this)">Brain & Mental</button>
+        <button class="chip-btn" onclick="filterByCategory('Stomach & Digestion', this)">Stomach & Digestion</button>
+        <button class="chip-btn" onclick="filterByCategory('Skin', this)">Skin</button>
+      </div>
+    </section>
 
-    <!-- Category Filter Chips -->
-    <div class="chips-container">
-      <button class="chip-btn active" onclick="filterByCategory('all', this)">All</button>
-      <button class="chip-btn" onclick="filterByCategory('Heart', this)">Heart & Blood</button>
-      <button class="chip-btn" onclick="filterByCategory('Lungs', this)">Lungs & Breathing</button>
-      <button class="chip-btn" onclick="filterByCategory('Brain', this)">Brain & Mental</button>
-      <button class="chip-btn" onclick="filterByCategory('Kidney', this)">Kidney & Sugar</button>
-      <button class="chip-btn" onclick="filterByCategory('Stomach', this)">Stomach & Digestion</button>
-      <button class="chip-btn" onclick="filterByCategory('Joints', this)">Joints & Bones</button>
-    </div>
-
-    <!-- Dynamic Results Card -->
-    <div id="results-card" class="card" style="display: none;">
-      <div>
+    <!-- Results Display Card (Hidden by default) -->
+    <section id="results-card" class="results-card" style="display: none;">
+      <div class="card-header">
         <span id="res-badge" class="badge">Category</span>
         <h2 id="res-title">Condition Title</h2>
       </div>
       
-      <div class="card-section">
-        <h3 id="res-what-label">What is it?</h3>
-        <p id="res-what-text">Description goes here...</p>
-      </div>
-
       <!-- Emergency Warning Box -->
-      <div id="emergency-box" class="emergency-alert" style="display: none;">
-        <strong>When to Seek Immediate Care:</strong>
-        <p id="res-emergency-text">Emergency instructions...</p>
+      <div id="emergency-box" class="emergency-box" style="display: none;">
+        <strong>🚨 When to Seek Immediate Care:</strong>
+        <p id="res-emergency-text"></p>
       </div>
 
-      <div class="card-section">
+      <div class="card-body">
+        <h3 id="res-what-label">What is it?</h3>
+        <p id="res-what-text"></p>
+
         <h3 id="res-lifestyle-label">Simple Daily Tips:</h3>
-        <div id="res-action-grid" class="action-grid">
-          <!-- Dynamic lifestyle tips injected here -->
-        </div>
+        <div id="res-action-grid" class="action-grid"></div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
+  <!-- Link to your script.js file -->
   <script src="script.js"></script>
 </body>
 </html>
